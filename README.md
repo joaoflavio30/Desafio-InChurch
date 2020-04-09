@@ -29,7 +29,7 @@ Nessa parte do processo de recrutamento você desenvolverá uma aplicação Android.
 
 Para facilitar a sua vida, padronizar e explorar algumas habilidades suas, estamos disponibilizando um mockup para que você possa segui-lo. Lembre-se, você pode(e deve) mudar cor, tipo e tamanho de fonte, ícones e outras coisa que fizerem sentido, mas não esqueça de seguir a estrutura proposta.  
 
-![Alt text](https://bitbucket.org/inradar/inchurch-android-challenge/raw/93e5e6d92792eb1a6af6737a939627ecc0584889/images/img1.png) ![Alt text](https://bitbucket.org/inradar/inchurch-android-challenge/raw/93e5e6d92792eb1a6af6737a939627ecc0584889/images/img2.png) ![Alt text](https://bitbucket.org/inradar/inchurch-android-challenge/raw/93e5e6d92792eb1a6af6737a939627ecc0584889/images/img3.png)
+![Alt text](https://bitbucket.org/inradar/inchurch-android-challenge/raw/0be3880f3ef7befaae9a5e3f7d7a4c90c9287e46/images/img1.png) ![Alt text](https://bitbucket.org/inradar/inchurch-android-challenge/raw/0be3880f3ef7befaae9a5e3f7d7a4c90c9287e46/images/img2.png) ![Alt text](https://bitbucket.org/inradar/inchurch-android-challenge/raw/0be3880f3ef7befaae9a5e3f7d7a4c90c9287e46/images/img3.png)
 
 * * *
 
