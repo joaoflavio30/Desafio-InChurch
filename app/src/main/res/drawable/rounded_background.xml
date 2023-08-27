@@ -1,0 +1,4 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <corners android:radius="10dp" /> <!-- Ajuste o valor do radius para controlar o arredondamento dos cantos -->
+</shape>

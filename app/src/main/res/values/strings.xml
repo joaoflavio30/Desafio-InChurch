@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">inChurchMovie</string>
+    <string name="title_home">Home</string>
+    <string name="title_details">Details</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="search">Search</string>
+    <string name="trending_movies">Trending Movies</string>
+    <string name="popular_movies">Popular Movies</string>
+    <string name="upcoming_movies">Upcoming Movies</string>
+    <string name="network_error">Network Error</string>
+    <string name="user_n_score">User \n Score</string>
+    <string name="_05_31_2023">05/31/2023</string>
+    <string name="adventure">Adventure</string>
+    <string name="favorites">Favorites</string>
+</resources>

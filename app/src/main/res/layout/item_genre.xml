@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:elevation="10dp"
+    android:backgroundTint="@color/gray"
+    android:foreground="@drawable/rounded_background"
+    android:layout_marginEnd="@dimen/margin_init">
+
+    <TextView
+        android:textSize="13sp"
+        android:textColor="@color/white"
+        android:id="@+id/genre_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/adventure"
+        android:padding="3dp" />
+
+</androidx.cardview.widget.CardView>
