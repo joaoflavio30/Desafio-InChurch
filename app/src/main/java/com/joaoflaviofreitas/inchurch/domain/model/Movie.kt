@@ -17,8 +17,7 @@ data class Movie(
     val video: Boolean,
     val voteAverage: Double,
     val backdropPath: String,
-    val genres: List<Genre>?
-): Serializable {
+    val genres: List<Genre>?,
+) : Serializable {
     var isFavorite: Boolean = false
-
 }

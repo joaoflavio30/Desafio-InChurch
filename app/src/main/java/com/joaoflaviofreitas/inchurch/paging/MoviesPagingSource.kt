@@ -39,7 +39,7 @@ class MoviesPagingSource(private val movieApi: MovieApi, private val pagingType:
             LoadResult.Page(
                 data = response.body()?.results ?: emptyList(),
                 prevKey = if (pageIndex == 1) null else pageIndex - 1,
-                nextKey = if (pageIndex == response.body()!!.total_pages) null else pageIndex + 1,
+                nextKey = if (pageIndex == response.body()!!.totalPages) null else pageIndex + 1,
             )
         } catch (exception: IOException) {
             return LoadResult.Error(exception)

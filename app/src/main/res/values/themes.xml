@@ -14,6 +14,12 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="MySplashScreen" parent="Theme.SplashScreen">
+        <item name="postSplashScreenTheme">@style/Theme.InChurchMovie</item>
+
+
+    </style>
+
     <style name="ShapeAppearance.Image.PILL" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">15dp</item>

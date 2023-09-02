@@ -14,8 +14,6 @@ import com.joaoflaviofreitas.inchurch.domain.repository.MovieRepository
 import com.joaoflaviofreitas.inchurch.paging.MoviesPagingSource
 import com.joaoflaviofreitas.inchurch.utils.Constants.API_KEY
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import okio.IOException
 import retrofit2.HttpException
@@ -89,7 +87,6 @@ class MovieRepositoryImpl @Inject constructor(private val movieApi: MovieApi, pr
 
     override suspend fun insertFavoriteMovie(favoriteMovieId: FavoriteMovieId) {
         try {
-            Log.d("insert", "insert chamado")
             movieDao.addFavoriteMovie(favoriteMovieId)
         } catch (e: IOException) {
             throw IOException()

@@ -13,6 +13,8 @@ import com.joaoflaviofreitas.inchurch.domain.usecases.GetUpcomingMovies
 import com.joaoflaviofreitas.inchurch.domain.usecases.IsMovieFavorite
 import com.joaoflaviofreitas.inchurch.domain.usecases.SearchFavoriteMoviesByTerm
 import com.joaoflaviofreitas.inchurch.domain.usecases.SearchMoviesByTerm
+import com.joaoflaviofreitas.inchurch.utils.DefaultDispatcherProvider
+import com.joaoflaviofreitas.inchurch.utils.DispatcherProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -70,4 +72,8 @@ object DomainModule {
     @Provides
     @Singleton
     fun providesGetAllFavoriteMoviesQuantity(repository: MovieRepository): GetAllFavoriteMoviesQuantity = GetAllFavoriteMoviesQuantity(repository)
+
+    @Provides
+    @Singleton
+    fun providesDispatcherProvider(): DispatcherProvider = DefaultDispatcherProvider()
 }

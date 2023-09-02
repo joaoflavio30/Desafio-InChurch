@@ -8,5 +8,4 @@ class DeleteFavoriteMovie(private val repository: MovieRepository) {
     suspend fun execute(favoriteMovieId: FavoriteMovieId) {
         repository.deleteFavoriteMovie(favoriteMovieId)
     }
-
 }

@@ -8,7 +8,7 @@ import okhttp3.Request
 import okhttp3.Response
 import okio.IOException
 
-class ConnectivityInterceptor(private val context: Context): Interceptor {
+class ConnectivityInterceptor(private val context: Context) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         if (!isAvailableNetwork) {
             throw IOException("No Internet")
@@ -30,5 +30,4 @@ class ConnectivityInterceptor(private val context: Context): Interceptor {
             else -> false
         }
     }
-
 }

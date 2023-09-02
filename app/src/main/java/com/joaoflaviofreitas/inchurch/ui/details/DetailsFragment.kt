@@ -81,7 +81,6 @@ class DetailsFragment : Fragment() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 favoriteMovie.collectLatest {
-                    Log.d("acsa", "$it")
                     handleIsFavoriteMovie(it)
                 }
             }
@@ -162,11 +161,9 @@ class DetailsFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.genres.collectLatest {
-                    if (it != null) {
-                        val genresForMovie = movie.genres
-                        genreAdapter.submitList(genresForMovie)
-                        Log.d("genres", "$it")
-                    }
+                    val genresForMovie = movie.genres
+                    genreAdapter.submitList(genresForMovie)
+                    Log.d("genres", "$it")
                 }
             }
         }

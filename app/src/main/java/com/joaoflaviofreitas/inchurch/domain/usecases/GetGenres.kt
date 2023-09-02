@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.map
 
 class GetGenres(private val repository: MovieRepository) {
     fun execute(): Flow<List<Genre>> = repository.getGenres().map {
-       it.map {responseGenre ->
-           responseGenre.toGenre()
-       }
+        it.map { responseGenre ->
+            responseGenre.toGenre()
+        }
     }
 }

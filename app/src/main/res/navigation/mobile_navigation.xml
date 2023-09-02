@@ -28,7 +28,7 @@
 
     <fragment
         android:id="@+id/navigation_favorites"
-        android:name="com.joaoflaviofreitas.inchurch.ui.notifications.FavoritesFragment"
+        android:name="com.joaoflaviofreitas.inchurch.ui.favorites.FavoritesFragment"
         android:label="@string/favorites"
         tools:layout="@layout/fragment_favorites" >
         <action

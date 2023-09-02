@@ -12,32 +12,32 @@ interface MovieApi {
     @GET("trending/movie/week")
     suspend fun getTrendingMovies(
         @Query(value = "api_key") apiKey: String,
-        @Query(value = "page") page: Int = 1
+        @Query(value = "page") page: Int = 1,
     ): Response<ResponseApi>
 
     @GET("movie/popular")
     suspend fun getPopularMovies(
         @Query(value = "api_key") apiKey: String,
-        @Query(value = "page") page: Int = 1
+        @Query(value = "page") page: Int = 1,
     ): Response<ResponseApi>
 
     @GET("movie/upcoming")
     suspend fun getUpcomingMovies(
         @Query(value = "api_key") apiKey: String,
-        @Query(value = "page") page: Int = 1
+        @Query(value = "page") page: Int = 1,
     ): Response<ResponseApi>
 
     @GET("search/movie")
     suspend fun searchMoviesByTerm(
         @Query(value = "api_key") apiKey: String,
         @Query(value = "page") page: Int = 1,
-        @Query("query") searchTerm: String ="",
-        @Query("language") language: String = "en_US"
+        @Query("query") searchTerm: String = "",
+        @Query("language") language: String = "en_US",
     ): Response<ResponseApi>
 
     @GET("genre/movie/list")
     suspend fun getGenres(
-        @Query(value = "api_key") apiKey: String
+        @Query(value = "api_key") apiKey: String,
     ): Response<ResponseGenreApi>
 
     @GET("movie/{movie_id}")

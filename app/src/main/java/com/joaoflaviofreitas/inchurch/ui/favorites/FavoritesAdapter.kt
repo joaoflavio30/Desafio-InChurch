@@ -1,4 +1,4 @@
-package com.joaoflaviofreitas.inchurch.ui.notifications
+package com.joaoflaviofreitas.inchurch.ui.favorites
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

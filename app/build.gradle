@@ -22,7 +22,7 @@ android {
         buildConfigField "String", "BASE_IMAGE_URL_ORIGINAL", localProperties['baseUrlDetails']
 
         applicationId "com.joaoflaviofreitas.inchurch"
-        minSdk 24
+        minSdk 31
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -93,4 +93,13 @@ dependencies {
     // Other dependencies
     implementation "androidx.lifecycle:lifecycle-runtime:2.3.1" // Required for LiveData and ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel:2.3.1"
+
+    // Splash Screen Api
+    implementation("androidx.core:core-splashscreen:1.0.0")
+
+    // Unit Tests
+    testImplementation "io.mockk:mockk:1.13.7"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4"
+    testImplementation 'app.cash.turbine:turbine:1.0.0'
+    testImplementation 'androidx.paging:paging-testing:3.2.0'
 }

@@ -1,4 +1,4 @@
-package com.joaoflaviofreitas.inchurch.ui.notifications
+package com.joaoflaviofreitas.inchurch.ui.favorites
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -44,8 +44,11 @@ class FavoritesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.swipeRefresh.setOnRefreshListener {
-            if(binding.searchView.query == null)  viewModel.fetchFavoritesMovies()
-            else viewModel.searchFavoriteMovie(binding.searchView.query.toString())
+            if (binding.searchView.query == null) {
+                viewModel.fetchFavoritesMovies()
+            } else {
+                viewModel.searchFavoriteMovie(binding.searchView.query.toString())
+            }
             binding.swipeRefresh.isRefreshing = false
         }
     }
@@ -87,7 +90,7 @@ class FavoritesFragment : Fragment() {
                 if (!newText.isNullOrBlank() && newText.isNotEmpty()) {
                     viewModel.searchFavoriteMovie(newText)
                 } else {
-                 viewModel.fetchFavoritesMovies()
+                    viewModel.fetchFavoritesMovies()
                 }
                 return false
             }

@@ -1,4 +1,4 @@
-package com.joaoflaviofreitas.inchurch.ui.notifications
+package com.joaoflaviofreitas.inchurch.ui.favorites
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -32,7 +32,6 @@ class FavoritesViewModel @Inject constructor(
 
     private val _favoriteMovies: MutableStateFlow<Response<List<FavoriteMovieId>>> =
         MutableStateFlow(Response.Loading)
-    val favoriteMovies = _favoriteMovies.asStateFlow()
 
     private val _quantityFavoriteMovies: MutableStateFlow<Int?> = MutableStateFlow(null)
     private val quantityFavoriteMovie = _quantityFavoriteMovies
@@ -56,13 +55,10 @@ class FavoritesViewModel @Inject constructor(
     private fun getMovies(list: List<FavoriteMovieId>) {
         viewModelScope.launch(Dispatchers.IO) {
             val newList = mutableListOf<Movie>()
-            var errorMessage = "Network Error"
             list.forEach {
                 getMovieDetails.execute(it.id).collectLatest { response ->
                     if (response is Response.Success) {
                         newList.add(response.data)
-                    } else if (response is Response.Error) {
-                        errorMessage = response.errorMessage
                     }
                 }
             }

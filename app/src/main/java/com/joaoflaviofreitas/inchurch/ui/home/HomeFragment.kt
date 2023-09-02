@@ -80,17 +80,17 @@ class HomeFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    viewModel.getTrendingMovies().collectLatest { pagingData ->
+                    viewModel.trendingMovies.collectLatest { pagingData ->
                         trendingAdapter.submitData(pagingData)
                     }
                 }
                 launch {
-                    viewModel.getPopularMovies().collectLatest { pagingData ->
+                    viewModel.popularMovies.collectLatest { pagingData ->
                         popularAdapter.submitData(pagingData)
                     }
                 }
                 launch {
-                    viewModel.getUpcomingMovies().collectLatest { pagingData ->
+                    viewModel.upcomingMovies.collectLatest { pagingData ->
                         upcomingAdapter.submitData(pagingData)
                     }
                 }
@@ -150,13 +150,20 @@ class HomeFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 trendingAdapter.loadStateFlow.collectLatest { loadStates ->
-                    binding.rvSearchMovie.isVisible = loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query != null
-                    binding.rvTrendingMovies.isVisible = loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query.isEmpty()
-                    binding.trendingMoviesTitle.isVisible = loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query.isEmpty()
-                    binding.rvPopularMovies.isVisible = loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query.isEmpty()
-                    binding.popularMoviesTitle.isVisible = loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query.isEmpty()
-                    binding.rvUpcomingMovies.isVisible = loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query.isEmpty()
-                    binding.upcomingMoviesTitle.isVisible = loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query.isEmpty()
+                    binding.rvSearchMovie.isVisible =
+                        loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query != null
+                    binding.rvTrendingMovies.isVisible =
+                        loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query.isEmpty()
+                    binding.trendingMoviesTitle.isVisible =
+                        loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query.isEmpty() && loadStates.source.refresh !is LoadState.Loading
+                    binding.rvPopularMovies.isVisible =
+                        loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query.isEmpty()
+                    binding.popularMoviesTitle.isVisible =
+                        loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query.isEmpty() && loadStates.source.refresh !is LoadState.Loading
+                    binding.rvUpcomingMovies.isVisible =
+                        loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query.isEmpty()
+                    binding.upcomingMoviesTitle.isVisible =
+                        loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query.isEmpty() && loadStates.source.refresh !is LoadState.Loading
                     handleError(loadStates)
                     binding.loadBar.isVisible = loadStates.source.refresh is LoadState.Loading
                     binding.errorMessage.isVisible = loadStates.source.refresh is LoadState.Error

@@ -34,7 +34,7 @@ object DataModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(connectivityInterceptor: ConnectivityInterceptor) : OkHttpClient {
+    fun provideOkHttpClient(connectivityInterceptor: ConnectivityInterceptor): OkHttpClient {
         return OkHttpClient().newBuilder().addInterceptor(connectivityInterceptor).build()
     }
 

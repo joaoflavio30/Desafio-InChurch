@@ -10,9 +10,8 @@ import com.joaoflaviofreitas.inchurch.domain.usecases.AddFavoriteMovie
 import com.joaoflaviofreitas.inchurch.domain.usecases.DeleteFavoriteMovie
 import com.joaoflaviofreitas.inchurch.domain.usecases.GetGenres
 import com.joaoflaviofreitas.inchurch.domain.usecases.GetMovieDetails
-import com.joaoflaviofreitas.inchurch.domain.usecases.IsMovieFavorite
+import com.joaoflaviofreitas.inchurch.utils.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,10 +27,10 @@ class DetailsViewModel @Inject constructor(
     private val addFavoriteMovie: AddFavoriteMovie,
     private val deleteFavoriteMovie: DeleteFavoriteMovie,
     private val getMovieDetails: GetMovieDetails,
-    private val isMovieFavorite: IsMovieFavorite,
+    private val dispatcherProvider: DispatcherProvider,
 ) : ViewModel() {
 
-    private val _genres: MutableStateFlow<List<Genre>?> = MutableStateFlow(null)
+    private val _genres: MutableStateFlow<List<Genre>> = MutableStateFlow(emptyList())
     val genres = _genres.asStateFlow()
 
     private val _favoriteMovie: MutableSharedFlow<Boolean> = MutableSharedFlow(
@@ -49,7 +48,7 @@ class DetailsViewModel @Inject constructor(
     }
 
     fun getMovieDetails(movieId: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             getMovieDetails.execute(movieId).collectLatest {
                 _uiState.value = it
             }
@@ -57,7 +56,7 @@ class DetailsViewModel @Inject constructor(
     }
 
     fun addOrRemoveFavoriteMovie(favoriteMovieId: FavoriteMovieId, movie: Movie) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             if (movie.isFavorite) {
                 _favoriteMovie.emit(false)
                 if (uiState.value is Response.Success) {
@@ -77,7 +76,7 @@ class DetailsViewModel @Inject constructor(
     }
 
     private fun fetchGenres() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             getGenres.execute().collectLatest {
                 _genres.value = it
             }
