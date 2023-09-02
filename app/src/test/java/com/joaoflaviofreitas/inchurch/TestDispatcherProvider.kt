@@ -5,12 +5,13 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 
 @ExperimentalCoroutinesApi
 class TestDispatcherProvider : DispatcherProvider {
 
     val testScope = TestScope()
-    private val testDispatcher = StandardTestDispatcher(testScope.testScheduler)
+    private val testDispatcher = UnconfinedTestDispatcher(testScope.testScheduler)
 
     override val main: CoroutineDispatcher
         get() = testDispatcher

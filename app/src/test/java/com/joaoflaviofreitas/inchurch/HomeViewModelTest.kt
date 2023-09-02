@@ -19,19 +19,12 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.TestCoroutineScope
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.junit.After
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
@@ -51,7 +44,7 @@ class HomeViewModelTest {
 
     private var dispatcherProvider = TestDispatcherProvider()
 
-    private val testScope = dispatcherProvider.testScope
+    private val testScope = TestCoroutineScope()
 
     private val pagingData = PagingData.from(
         listOf(
@@ -69,21 +62,11 @@ class HomeViewModelTest {
         dispatcherProvider,
     )
 
-    @Before
-    fun setUp() {
-        Dispatchers.setMain(StandardTestDispatcher(testScope.testScheduler))
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-    }
-
     @Test
-    fun `When GetTrendingMovies, expected listMovie `() = testScope.runTest {
+    fun `When GetTrendingMovies, expected listMovie `() = runTest {
         // Given
         val expected = listOf(movie)
-        coEvery { getTrendingMovies.execute() } returns flow { emit(PagingData.from(listOf(movie))) }
+        coEvery { getTrendingMovies.execute() } returns flowOf(pagingData)
 
         // When ( Initialize ViewModel )
         val viewModel = HomeViewModel(
@@ -93,7 +76,6 @@ class HomeViewModelTest {
             searchMoviesByTerm,
             dispatcherProvider,
         )
-        testScope.coroutineContext.cancelChildren()
         viewModel.trendingMovies.test {
             val itemSnapshot = viewModel.trendingMovies.asSnapshot {
                 scrollTo(0)
