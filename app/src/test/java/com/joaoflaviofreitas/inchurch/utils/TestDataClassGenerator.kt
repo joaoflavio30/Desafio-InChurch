@@ -1,5 +1,6 @@
 package com.joaoflaviofreitas.inchurch.utils
 
+import androidx.paging.PagingData
 import com.joaoflaviofreitas.inchurch.data.model.ResponseMovie
 import com.joaoflaviofreitas.inchurch.domain.model.Genre
 import com.joaoflaviofreitas.inchurch.domain.model.Movie
@@ -22,6 +23,14 @@ class TestDataClassGenerator {
 
     fun getResponseMovie(): ResponseMovie = responseMovie
     fun getMovie(): Movie = movie
+
+    fun getGenres() = genres
+
+    fun getPagingDataWithMovie() = PagingData.from(
+        listOf(
+            movie,
+        ),
+    )
     companion object {
         val genres = listOf(
             Genre(1, "Action"),

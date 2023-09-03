@@ -33,7 +33,7 @@ fun ResponseMovie.toMovie(): Movie {
         popularity = this.popularity,
         voteCount = this.vote_count,
         video = this.video,
-        voteAverage = decimalFormat.format(this.vote_average).toDouble(),
+        voteAverage = decimalFormat.format(this.vote_average).replace(",", ".").toDouble(),
     )
 }
 

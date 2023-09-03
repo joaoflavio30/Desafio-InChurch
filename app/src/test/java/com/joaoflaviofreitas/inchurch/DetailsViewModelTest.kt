@@ -9,6 +9,7 @@ import com.joaoflaviofreitas.inchurch.domain.usecases.DeleteFavoriteMovie
 import com.joaoflaviofreitas.inchurch.domain.usecases.GetGenres
 import com.joaoflaviofreitas.inchurch.domain.usecases.GetMovieDetails
 import com.joaoflaviofreitas.inchurch.ui.details.DetailsViewModel
+import com.joaoflaviofreitas.inchurch.utils.TestDataClassGenerator
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
@@ -16,7 +17,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
-import java.util.Date
 
 @ExperimentalCoroutinesApi
 class DetailsViewModelTest {
@@ -36,16 +36,6 @@ class DetailsViewModelTest {
         testDispatcher,
     )
 
-//    @Before
-//    fun setUp() {
-//        Dispatchers.setMain(StandardTestDispatcher())
-//   }
-//
-//    @After
-//    fun tearDown() {
-//        Dispatchers.resetMain()
-//    }
-
     @Test
     fun `Given UiState, When GetMovieDetails, Then Returns Success`() = runTest {
         // Given
@@ -54,7 +44,6 @@ class DetailsViewModelTest {
 
         // When
         viewModel.getMovieDetails(movie.id)
-//        getMovieDetails.emit(Response.Success(movie))
 
         // Then
         assertEquals(expected, viewModel.uiState.value)
@@ -65,7 +54,7 @@ class DetailsViewModelTest {
         val expected = Response.Error("Network Error")
         coEvery { getMovieDetails.execute(movie.id) } returns flow { emit(Response.Error("Network Error")) }
 
-        // Call
+        // When
         viewModel.getMovieDetails(movie.id)
 
         assertEquals(expected, viewModel.uiState.value)
@@ -80,7 +69,7 @@ class DetailsViewModelTest {
             coEvery { addFavoriteMovie.execute(any()) } coAnswers {
                 movie.isFavorite = expected
             }
-            // Call
+            // When
             viewModel.getMovieDetails(movie.id)
             viewModel.addOrRemoveFavoriteMovie(FavoriteMovieId(1, "Spider-man"), movie)
 
@@ -103,7 +92,7 @@ class DetailsViewModelTest {
             coEvery { deleteFavoriteMovie.execute(any()) } coAnswers {
                 movie.isFavorite = expected
             }
-            // Call
+            // When
             viewModel.getMovieDetails(movie.id)
             viewModel.addOrRemoveFavoriteMovie(FavoriteMovieId(1, "Spider-man"), movie)
 
@@ -145,43 +134,8 @@ class DetailsViewModelTest {
     }
 
     companion object {
-        val genres = listOf(
-            Genre(1, "Action"),
-            Genre(2, "Adventure"),
-            Genre(3, "Science Fiction"),
-        )
-
-        val movie = Movie(
-            id = 123,
-            posterPath = "poster_path.jpg",
-            isAdult = false,
-            overview = "This is the movie overview.",
-            originalTitle = "Original Title",
-            originalLanguage = "en",
-            title = "Movie Title",
-            releaseDate = Date(1679875200000), // January 26, 2023
-            popularity = 7.8,
-            voteCount = 1500,
-            video = false,
-            voteAverage = 7.5,
-            backdropPath = "backdrop_path.jpg",
-            genres = genres,
-        )
-        val movie2 = Movie(
-            id = 1234,
-            posterPath = "poster_path.jpg",
-            isAdult = false,
-            overview = "This is the movie overview.",
-            originalTitle = "Original Title",
-            originalLanguage = "en",
-            title = "Movie Title3",
-            releaseDate = Date(1679875200000), // January 26, 2023
-            popularity = 7.8,
-            voteCount = 1500,
-            video = false,
-            voteAverage = 7.5,
-            backdropPath = "backdrop_path.jpg",
-            genres = genres,
-        )
+        private val testDataClassGenerator = TestDataClassGenerator()
+        val genres = testDataClassGenerator.getGenres()
+        val movie = testDataClassGenerator.getMovie()
     }
 }

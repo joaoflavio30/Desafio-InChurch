@@ -1,6 +1,7 @@
 package com.joaoflaviofreitas.inchurch.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -167,6 +168,7 @@ class HomeFragment : Fragment() {
                     handleError(loadStates)
                     binding.loadBar.isVisible = loadStates.source.refresh is LoadState.Loading
                     binding.errorMessage.isVisible = loadStates.source.refresh is LoadState.Error
+                    Log.d("teste", "${loadStates.source.refresh}")
                 }
             }
         }
