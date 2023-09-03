@@ -1,6 +1,8 @@
 package com.joaoflaviofreitas.inchurch.utils
 
 import androidx.paging.PagingData
+import com.joaoflaviofreitas.inchurch.data.model.FavoriteMovieId
+import com.joaoflaviofreitas.inchurch.data.model.ResponseGenre
 import com.joaoflaviofreitas.inchurch.data.model.ResponseMovie
 import com.joaoflaviofreitas.inchurch.domain.model.Genre
 import com.joaoflaviofreitas.inchurch.domain.model.Movie
@@ -26,16 +28,23 @@ class TestDataClassGenerator {
 
     fun getGenres() = genres
 
-    fun getPagingDataWithMovie() = PagingData.from(
-        listOf(
-            movie,
-        ),
-    )
+    fun getResponseGenres() = responseGenres
+
+    fun getPagingDataWithMovie(): PagingData<Movie> = pagingData
+
+    fun getFavoriteMovieId() = favoriteMovieId
+
     companion object {
         val genres = listOf(
             Genre(1, "Action"),
             Genre(2, "Adventure"),
             Genre(3, "Science Fiction"),
+        )
+
+        val responseGenres = listOf(
+            ResponseGenre(1, "Action"),
+            ResponseGenre(2, "Adventure"),
+            ResponseGenre(3, "Science Fiction"),
         )
 
         val movie = Movie(
@@ -70,5 +79,8 @@ class TestDataClassGenerator {
             backdrop_path = "backdrop_path.jpg",
             genres = genres,
         )
+        val pagingData = PagingData.from(listOf(movie))
+
+        val favoriteMovieId = FavoriteMovieId(1, "spider-man")
     }
 }

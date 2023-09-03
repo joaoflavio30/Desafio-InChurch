@@ -9,8 +9,8 @@ import com.joaoflaviofreitas.inchurch.domain.usecases.GetAllFavoriteMoviesQuanti
 import com.joaoflaviofreitas.inchurch.domain.usecases.GetFavoriteMovies
 import com.joaoflaviofreitas.inchurch.domain.usecases.GetMovieDetails
 import com.joaoflaviofreitas.inchurch.domain.usecases.SearchFavoriteMoviesByTerm
+import com.joaoflaviofreitas.inchurch.utils.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -24,6 +24,7 @@ class FavoritesViewModel @Inject constructor(
     private val getMovieDetails: GetMovieDetails,
     private val searchFavoriteMoviesByTerm: SearchFavoriteMoviesByTerm,
     private val getAllFavoriteMoviesQuantity: GetAllFavoriteMoviesQuantity,
+    private val dispatcherProvider: DispatcherProvider,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<Response<MutableList<Movie>>> =
@@ -42,7 +43,7 @@ class FavoritesViewModel @Inject constructor(
     }
 
     fun fetchFavoritesMovies() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             getFavoriteMovies.execute().catch {
                 _favoriteMovies.emit(Response.Error(it.message ?: "IO Exception"))
             }
@@ -53,7 +54,7 @@ class FavoritesViewModel @Inject constructor(
     }
 
     private fun getMovies(list: List<FavoriteMovieId>) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             val newList = mutableListOf<Movie>()
             list.forEach {
                 getMovieDetails.execute(it.id).collectLatest { response ->
@@ -72,7 +73,7 @@ class FavoritesViewModel @Inject constructor(
 
     fun searchFavoriteMovie(term: String) {
         _uiState.value = Response.Success(mutableListOf())
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             searchFavoriteMoviesByTerm.execute(term).catch {
                 _favoriteMovies.emit(Response.Error(it.message ?: "IO Exception"))
             }.collectLatest {
@@ -82,7 +83,7 @@ class FavoritesViewModel @Inject constructor(
     }
 
     private fun getQuantityOfFavoriteMovies() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             getAllFavoriteMoviesQuantity.execute().catch {
                 _uiState.value = Response.Error(it.message ?: "Database Error")
             }.collectLatest {

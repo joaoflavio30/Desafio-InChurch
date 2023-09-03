@@ -39,6 +39,10 @@ class HomeViewModel @Inject constructor(
         MutableStateFlow(PagingData.empty())
     val upcomingMovies = _upcomingMovies.asStateFlow()
 
+    private val _searchedMovie: MutableStateFlow<PagingData<Movie>> =
+        MutableStateFlow(PagingData.empty())
+    val searchedMovie = _searchedMovie.asStateFlow()
+
     init {
         getTrendingMovies()
         getPopularMovies()

@@ -1,5 +1,6 @@
 package com.joaoflaviofreitas.inchurch
 import androidx.paging.PagingData
+import app.cash.turbine.test
 import com.joaoflaviofreitas.inchurch.domain.model.Movie
 import com.joaoflaviofreitas.inchurch.domain.usecases.GetPopularMovies
 import com.joaoflaviofreitas.inchurch.domain.usecases.GetTrendingMovies
@@ -36,7 +37,7 @@ class HomeViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private val expected = TestDataClassGenerator().getPagingDataWithMovie()
+    private var expected = TestDataClassGenerator().getPagingDataWithMovie()
 
     @Test
     fun `When GetTrendingMovies, expected PagingData no empty`() = runTest {
@@ -97,4 +98,47 @@ class HomeViewModelTest {
 
         assertTrue(viewModel.upcomingMovies != PagingData.empty<Movie>())
     }
+
+    @Test
+    fun `When SearchMoviesByTerm, expected no empty Paging Data`() = runTest {
+        // Given
+        coEvery { getTrendingMovies.execute() } returns flow { emit(expected) }
+        coEvery { getPopularMovies.execute() } returns flow { emit(expected) }
+        coEvery { getUpcomingMovies.execute() } returns flow { emit(expected) }
+        coEvery { searchMoviesByTerm.execute(any(), any()) } returns flow { emit(expected) }
+
+        // When ( call the useCase )
+        val viewModel = HomeViewModel(
+            getTrendingMovies,
+            getPopularMovies,
+            getUpcomingMovies,
+            searchMoviesByTerm,
+            dispatcherProvider,
+        )
+        viewModel.searchMoviesByTerm("Movie Title").test {
+            assertTrue(awaitItem() != PagingData.empty<Movie>())
+        }
+    }
+
+//    @Test
+//    fun `When SearchMoviesByTerm, expected empty Paging Data`() = runTest {
+//        // Given
+//        expected = PagingData.empty()
+//        coEvery { getTrendingMovies.execute() } returns flow { emit(expected) }
+//        coEvery { getPopularMovies.execute() } returns flow { emit(expected) }
+//        coEvery { getUpcomingMovies.execute() } returns flow { emit(expected) }
+//        coEvery { searchMoviesByTerm.execute(any(), any()) } returns flow { emit(expected) }
+//
+//        // When ( call the useCase )
+//        val viewModel = HomeViewModel(
+//            getTrendingMovies,
+//            getPopularMovies,
+//            getUpcomingMovies,
+//            searchMoviesByTerm,
+//            dispatcherProvider,
+//        )
+//        viewModel.searchMoviesByTerm("Movie Title").test {
+//            assertTrue(awaitItem() != PagingData.empty<Movie>())
+//        }
+//    }
 }
