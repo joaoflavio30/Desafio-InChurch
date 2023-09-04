@@ -45,10 +45,23 @@ class FavoritesFragment : Fragment() {
         return binding.root
     }
 
+    private fun hasFavoriteMovie() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.quantityFavoriteMovie.collectLatest {
+                    if (it != null && it == 0) {
+                        binding.hasFavoriteMovie.isVisible = true
+                        binding.notFoundMovie.isVisible = false
+                    }
+                }
+            }
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.swipeRefresh.setOnRefreshListener {
-            if (binding.searchView.query == null) {
+            if (binding.searchView.query == null || binding.searchView.query.isBlank() || binding.searchView.query.isEmpty()) {
                 viewModel.fetchFavoritesMovies()
             } else {
                 viewModel.searchFavoriteMovie(binding.searchView.query.toString())
@@ -70,19 +83,14 @@ class FavoritesFragment : Fragment() {
                     when (response) {
                         is Response.Success -> {
                             setupUi(response.data)
-                            binding.errorMessage.isGone = true
                         }
 
                         is Response.Error -> {
-                            binding.errorMessage.isVisible = true
                             handleError(response.errorMessage)
-                            binding.notFoundMovie.isVisible = false
                         }
 
                         is Response.Loading -> {
-                            binding.errorMessage.isGone = true
                             handleLoading()
-                            binding.notFoundMovie.isVisible = false
                         }
                     }
                 }
@@ -101,18 +109,46 @@ class FavoritesFragment : Fragment() {
             }
         }
     }
+
+    private fun movieIsFound() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.favoriteMovies.collectLatest { response ->
+                    when (response) {
+                        is Response.Error -> {
+                            binding.notFoundMovie.isVisible = true
+                        }
+                        else -> {
+                            binding.notFoundMovie.isVisible = false
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private fun handleLoading() {
         binding.loadBar.isVisible = true
+        binding.errorMessage.isGone = true
+        binding.notFoundMovie.isVisible = false
+        binding.hasFavoriteMovie.isVisible = false
     }
 
     private fun handleError(errorMessage: String) {
         binding.loadBar.isGone = true
+        binding.errorMessage.isVisible = true
         binding.errorMessage.text = errorMessage
+        binding.notFoundMovie.isVisible = false
+        binding.hasFavoriteMovie.isVisible = false
     }
 
     private fun setupUi(data: MutableList<Movie>) {
         binding.loadBar.isGone = true
+        binding.errorMessage.isGone = true
         favoritesAdapter.submitList(data)
+        hasFavoriteMovie()
+
+        binding.notFoundMovie.isVisible = binding.searchView.query.toString().isNotEmpty() && data.isEmpty()
     }
 
     private fun navigateToDetailsFragment(movie: Movie) {

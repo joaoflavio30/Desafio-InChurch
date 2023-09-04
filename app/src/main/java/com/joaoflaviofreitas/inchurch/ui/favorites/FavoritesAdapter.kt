@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.joaoflaviofreitas.inchurch.BuildConfig
+import com.joaoflaviofreitas.inchurch.R
 import com.joaoflaviofreitas.inchurch.databinding.GridMovieItemBinding
 import com.joaoflaviofreitas.inchurch.domain.model.Movie
 import com.joaoflaviofreitas.inchurch.utils.displayDateFormat
@@ -23,7 +24,7 @@ class FavoritesAdapter(private val clickItem: (Movie) -> Unit) : ListAdapter<Mov
             binding.circleBar.max = 10
             binding.circleBar.setProgress(movie.voteAverage.toInt(), true)
             Glide.with(binding.root.context)
-                .load("${BuildConfig.BASE_IMAGE_URL}${movie.posterPath}").diskCacheStrategy(
+                .load("${BuildConfig.BASE_IMAGE_URL}${movie.posterPath}").placeholder(R.drawable.gradient_background).diskCacheStrategy(
                     DiskCacheStrategy.ALL,
                 ).transition(
                     DrawableTransitionOptions.withCrossFade(),

@@ -1,6 +1,5 @@
 package com.joaoflaviofreitas.inchurch.data
 
-import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -111,7 +110,6 @@ class MovieRepositoryImpl @Inject constructor(private val movieApi: MovieApi, pr
             emit(Response.Loading)
             val result = movieApi.getMovieDetails(id, API_KEY).body()
             if (result != null) {
-                Log.d("44", "$result")
                 emit(Response.Success(result))
             }
         } catch (e: IOException) {

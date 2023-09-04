@@ -43,9 +43,9 @@ class HomeFragment : Fragment() {
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         setAdapters()
-        setupStatesOfRvs()
         searchMovieByTerm()
         observeResponse()
+        setupStatesOfRvs()
         return binding.root
     }
 
@@ -145,7 +145,6 @@ class HomeFragment : Fragment() {
         binding.upcomingMoviesTitle.isVisible = true
         binding.rvSearchMovie.isGone = true
     }
-
     private fun setupStatesOfRvs() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -153,15 +152,15 @@ class HomeFragment : Fragment() {
                     binding.rvTrendingMovies.isVisible =
                         loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query.isEmpty()
                     binding.trendingMoviesTitle.isVisible =
-                        loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query.isEmpty() && loadStates.source.refresh !is LoadState.Loading
+                        loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query.isEmpty() && trendingAdapter.itemCount != 0
                     binding.rvPopularMovies.isVisible =
                         loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query.isEmpty()
                     binding.popularMoviesTitle.isVisible =
-                        loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query.isEmpty() && loadStates.source.refresh !is LoadState.Loading
+                        loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query.isEmpty() && trendingAdapter.itemCount != 0
                     binding.rvUpcomingMovies.isVisible =
                         loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query.isEmpty()
                     binding.upcomingMoviesTitle.isVisible =
-                        loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query.isEmpty() && loadStates.source.refresh !is LoadState.Loading
+                        loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query.isEmpty() && trendingAdapter.itemCount != 0
                     handleError(loadStates)
                     binding.loadBar.isVisible = loadStates.source.refresh is LoadState.Loading
                     binding.errorMessage.isVisible = loadStates.source.refresh is LoadState.Error

@@ -33,9 +33,10 @@ class FavoritesViewModel @Inject constructor(
 
     private val _favoriteMovies: MutableStateFlow<Response<List<FavoriteMovieId>>> =
         MutableStateFlow(Response.Loading)
+    val favoriteMovies = _favoriteMovies.asStateFlow()
 
     private val _quantityFavoriteMovies: MutableStateFlow<Int?> = MutableStateFlow(null)
-    private val quantityFavoriteMovie = _quantityFavoriteMovies
+    val quantityFavoriteMovie = _quantityFavoriteMovies
 
     init {
         getQuantityOfFavoriteMovies()
@@ -58,25 +59,41 @@ class FavoritesViewModel @Inject constructor(
             val newList = mutableListOf<Movie>()
             list.forEach {
                 getMovieDetails.execute(it.id).collectLatest { response ->
-                    if (response is Response.Success) {
-                        newList.add(response.data)
+                    when (response) {
+                        is Response.Success -> {
+                            newList.add(response.data)
+                            bindDataInUiStateWhenFinishedList(newList, list)
+                        }
+                        is Response.Error -> {
+                            _uiState.emit(Response.Error("Network Error"))
+                        }
+                        else -> {
+                            _uiState.emit(Response.Loading)
+                        }
                     }
                 }
             }
-            if (newList.isNotEmpty()) {
+            if (list.isEmpty()) {
                 _uiState.emit(Response.Success(newList))
-            } else if (quantityFavoriteMovie.value == null) {
-                _uiState.emit(Response.Error("Network Error"))
             }
         }
     }
+
+    private suspend fun bindDataInUiStateWhenFinishedList(newList: MutableList<Movie>, list: List<FavoriteMovieId>) {
+        if (newList.size == list.size) _uiState.emit(Response.Success(newList))
+    }
+
     fun searchFavoriteMovie(term: String) {
         _uiState.value = Response.Success(mutableListOf())
         viewModelScope.launch(dispatcherProvider.io) {
             searchFavoriteMoviesByTerm.execute(term).catch {
                 _favoriteMovies.emit(Response.Error(it.message ?: "IO Exception"))
             }.collectLatest {
-                _favoriteMovies.emit(Response.Success(it))
+                if (it.isEmpty()) {
+                    _favoriteMovies.emit(Response.Error("Movie not found"))
+                } else {
+                    _favoriteMovies.emit(Response.Success(it))
+                }
                 getMovies(it)
             }
         }
