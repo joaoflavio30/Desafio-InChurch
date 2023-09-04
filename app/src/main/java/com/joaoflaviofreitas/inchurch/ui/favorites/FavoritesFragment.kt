@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.SearchView
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -17,8 +16,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.joaoflaviofreitas.inchurch.databinding.FragmentFavoritesBinding
 import com.joaoflaviofreitas.inchurch.domain.model.Movie
 import com.joaoflaviofreitas.inchurch.domain.model.Response
+import com.joaoflaviofreitas.inchurch.utils.getQueryTextChangeStateFlow
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -68,13 +72,17 @@ class FavoritesFragment : Fragment() {
                             setupUi(response.data)
                             binding.errorMessage.isGone = true
                         }
+
                         is Response.Error -> {
                             binding.errorMessage.isVisible = true
                             handleError(response.errorMessage)
+                            binding.notFoundMovie.isVisible = false
                         }
+
                         is Response.Loading -> {
                             binding.errorMessage.isGone = true
                             handleLoading()
+                            binding.notFoundMovie.isVisible = false
                         }
                     }
                 }
@@ -82,21 +90,17 @@ class FavoritesFragment : Fragment() {
         }
     }
 
+    @OptIn(FlowPreview::class)
     private fun searchMovieByTerm() {
-        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean = false
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                if (!newText.isNullOrBlank() && newText.isNotEmpty()) {
-                    viewModel.searchFavoriteMovie(newText)
-                } else {
-                    viewModel.fetchFavoritesMovies()
-                }
-                return false
+        lifecycleScope.launch(Dispatchers.IO) {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                binding.searchView.getQueryTextChangeStateFlow().debounce(300)
+                    .distinctUntilChanged().collectLatest {
+                        if (it != null) viewModel.searchFavoriteMovie(it)
+                    }
             }
-        })
+        }
     }
-
     private fun handleLoading() {
         binding.loadBar.isVisible = true
     }
@@ -112,7 +116,8 @@ class FavoritesFragment : Fragment() {
     }
 
     private fun navigateToDetailsFragment(movie: Movie) {
-        val action = FavoritesFragmentDirections.actionNavigationFavoritesToNavigationDetails(movie.id)
+        val action =
+            FavoritesFragmentDirections.actionNavigationFavoritesToNavigationDetails(movie.id)
         findNavController().navigate(action)
     }
 

@@ -70,13 +70,13 @@ class FavoritesViewModel @Inject constructor(
             }
         }
     }
-
     fun searchFavoriteMovie(term: String) {
         _uiState.value = Response.Success(mutableListOf())
         viewModelScope.launch(dispatcherProvider.io) {
             searchFavoriteMoviesByTerm.execute(term).catch {
                 _favoriteMovies.emit(Response.Error(it.message ?: "IO Exception"))
             }.collectLatest {
+                _favoriteMovies.emit(Response.Success(it))
                 getMovies(it)
             }
         }

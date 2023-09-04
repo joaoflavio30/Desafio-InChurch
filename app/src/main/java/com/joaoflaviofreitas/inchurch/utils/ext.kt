@@ -1,9 +1,12 @@
 package com.joaoflaviofreitas.inchurch.utils // ktlint-disable filename
 
+import androidx.appcompat.widget.SearchView
 import com.joaoflaviofreitas.inchurch.data.model.ResponseGenre
 import com.joaoflaviofreitas.inchurch.data.model.ResponseMovie
 import com.joaoflaviofreitas.inchurch.domain.model.Genre
 import com.joaoflaviofreitas.inchurch.domain.model.Movie
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -42,4 +45,21 @@ fun ResponseGenre.toGenre(): Genre {
         id = this.id,
         name = this.name,
     )
+}
+
+fun SearchView.getQueryTextChangeStateFlow(): StateFlow<String?> {
+    val query = MutableStateFlow<String?>(null)
+
+    setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        override fun onQueryTextSubmit(query: String?): Boolean {
+            return true
+        }
+
+        override fun onQueryTextChange(newText: String?): Boolean {
+            query.value = newText
+            return true
+        }
+    })
+
+    return query
 }
