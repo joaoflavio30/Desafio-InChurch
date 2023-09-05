@@ -5,7 +5,6 @@ import androidx.paging.PagingState
 import com.bumptech.glide.load.HttpException
 import com.joaoflaviofreitas.inchurch.data.api.MovieApi
 import com.joaoflaviofreitas.inchurch.data.model.ResponseMovie
-import com.joaoflaviofreitas.inchurch.utils.Constants.API_KEY
 import okio.IOException
 import java.lang.Exception
 
@@ -24,16 +23,16 @@ class MoviesPagingSource(private val movieApi: MovieApi, private val pagingType:
         return try {
             val response = when (pagingType) {
                 PagingType.POPULAR_MOVIES -> {
-                    movieApi.getPopularMovies(API_KEY, pageIndex)
+                    movieApi.getPopularMovies(pageIndex)
                 }
                 PagingType.TRENDING_MOVIES -> {
-                    movieApi.getTrendingMovies(API_KEY, pageIndex)
+                    movieApi.getTrendingMovies(pageIndex)
                 }
                 PagingType.UPCOMING_MOVIES -> {
-                    movieApi.getUpcomingMovies(API_KEY, pageIndex)
+                    movieApi.getUpcomingMovies(pageIndex)
                 }
                 PagingType.SEARCH_MOVIES -> {
-                    movieApi.searchMoviesByTerm(API_KEY, pageIndex, query)
+                    movieApi.searchMoviesByTerm(pageIndex, query)
                 }
             }
             LoadResult.Page(

@@ -49,11 +49,11 @@ class DetailsFragment : Fragment() {
         getMovieDetails()
         observeViewModel()
         setGenreView()
-        clickListeners()
+        initClickListeners()
         return root
     }
 
-    private fun clickListeners() {
+    private fun initClickListeners() {
         binding.starBtn.setOnClickListener {
             lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {

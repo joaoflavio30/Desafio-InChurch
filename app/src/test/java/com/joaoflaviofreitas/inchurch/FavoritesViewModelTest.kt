@@ -11,11 +11,9 @@ import com.joaoflaviofreitas.inchurch.utils.TestDataClassGenerator
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
-import okio.IOException
 import org.junit.Rule
 import org.junit.Test
 
@@ -52,25 +50,4 @@ class FavoritesViewModelTest {
 
         assertEquals(Response.Success(listOf(testDataClassGenerator.getMovie())), viewModel.uiState.value)
     }
-
-//    @Test
-//    fun `When FetchFavoriteMovies, expected Error Response`() = runTest {
-//        coEvery { getAllFavoriteMoviesQuantity.execute() } throws IOException()
-//        coEvery { getFavoriteMovie.execute() } returns flowOf(listOf(testDataClassGenerator.getFavoriteMovieId()))
-//        coEvery { getMovieDetails.execute(any()) } returns flowOf(Response.Error("Network Error"))
-//
-//        var exceptionThrown: Boolean = false
-//        try {
-//            viewModel = FavoritesViewModel(
-//                getFavoriteMovie,
-//                getMovieDetails,
-//                searchFavoriteMoviesByTerm,
-//                getAllFavoriteMoviesQuantity,
-//                testDispatcher,
-//            )
-//        } catch (exception: IOException) {
-//            exceptionThrown = true
-//        }
-//        if (exceptionThrown) assertTrue(viewModel.uiState.value !is Response.Success)
-//    }
 }

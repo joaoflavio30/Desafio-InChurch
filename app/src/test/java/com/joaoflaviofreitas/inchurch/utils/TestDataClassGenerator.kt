@@ -6,22 +6,9 @@ import com.joaoflaviofreitas.inchurch.data.model.ResponseGenre
 import com.joaoflaviofreitas.inchurch.data.model.ResponseMovie
 import com.joaoflaviofreitas.inchurch.domain.model.Genre
 import com.joaoflaviofreitas.inchurch.domain.model.Movie
-import com.joaoflaviofreitas.inchurch.domain.model.Response
 import java.util.Date
 
 class TestDataClassGenerator {
-
-    fun getSuccessResponse(): Response<Movie> {
-        val data = movie
-        return Response.Success(data)
-    }
-
-    fun getErrorResponse(): Response<Movie> {
-        val data = "Network Error"
-        return Response.Error(data)
-    }
-
-    fun getLoadingResponse(): Response<Movie> = Response.Loading
 
     fun getResponseMovie(): ResponseMovie = responseMovie
     fun getMovie(): Movie = movie

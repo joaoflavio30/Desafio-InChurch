@@ -75,7 +75,7 @@ class MovieRepositoryImpl @Inject constructor(private val movieApi: MovieApi, pr
 
     override fun getGenres(): Flow<List<ResponseGenre>> = flow {
         try {
-            val result = movieApi.getGenres(API_KEY).body()?.genres ?: emptyList()
+            val result = movieApi.getGenres().body()?.genres ?: emptyList()
             emit(result)
         } catch (e: IOException) {
             throw IOException()

@@ -1,7 +1,6 @@
 package com.joaoflaviofreitas.inchurch.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -68,10 +67,8 @@ class HomeFragment : Fragment() {
         lifecycleScope.launch(Dispatchers.Main) {
             if (binding.searchView.query.isEmpty()) {
                 admitsTheMainRecyclerViews()
-                Log.d("teste5555", "${binding.searchView.query}")
             } else {
                 dismissTheMainRecyclerViews()
-                Log.d("teste5555", "${binding.searchView.query}")
                 viewModel.searchMoviesByTerm(binding.searchView.query.toString())
             }
         }
@@ -147,6 +144,7 @@ class HomeFragment : Fragment() {
                 launch {
                     viewModel.searchedMovie.collectLatest { pagingData ->
                         searchAdapter.submitData(pagingData)
+                        binding.notFoundMovie.isVisible = !binding.rvTrendingMovies.isVisible && searchAdapter.itemCount == 0
                     }
                 }
             }

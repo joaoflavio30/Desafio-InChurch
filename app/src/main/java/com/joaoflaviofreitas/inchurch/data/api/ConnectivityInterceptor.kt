@@ -3,8 +3,8 @@ package com.joaoflaviofreitas.inchurch.data.api
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import com.joaoflaviofreitas.inchurch.utils.Constants.API_KEY
 import okhttp3.Interceptor
-import okhttp3.Request
 import okhttp3.Response
 import okio.IOException
 
@@ -13,8 +13,14 @@ class ConnectivityInterceptor(private val context: Context) : Interceptor {
         if (!isAvailableNetwork) {
             throw IOException("No Internet")
         }
-        val builder: Request.Builder = chain.request().newBuilder()
-        return chain.proceed(builder.build())
+        val original = chain.request()
+
+        val url = original.url.newBuilder()
+            .addQueryParameter("api_key", API_KEY)
+            .build()
+        val requestBuilder = original.newBuilder().url(url)
+        val request = requestBuilder.build()
+        return chain.proceed(request)
     }
     private val isAvailableNetwork: Boolean get() {
         val connectivityManager =
