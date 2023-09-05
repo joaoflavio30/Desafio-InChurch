@@ -1,11 +1,11 @@
 package com.joaoflaviofreitas.inchurch.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.widget.SearchView
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -20,10 +20,15 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.joaoflaviofreitas.inchurch.databinding.FragmentHomeBinding
 import com.joaoflaviofreitas.inchurch.domain.model.Movie
 import com.joaoflaviofreitas.inchurch.utils.RecyclerViewLayouts
+import com.joaoflaviofreitas.inchurch.utils.getQueryTextChangeStateFlow
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -45,7 +50,9 @@ class HomeFragment : Fragment() {
         setAdapters()
         searchMovieByTerm()
         observeResponse()
-        setupStatesOfRvs()
+        observeSearch()
+        setupLoadStatesOfRvs()
+        setupUiState()
         return binding.root
     }
 
@@ -54,6 +61,19 @@ class HomeFragment : Fragment() {
         binding.swipeRefresh.setOnRefreshListener {
             retryAdapters()
             binding.swipeRefresh.isRefreshing = false
+        }
+    }
+
+    private fun setupUiState() {
+        lifecycleScope.launch(Dispatchers.Main) {
+            if (binding.searchView.query.isEmpty()) {
+                admitsTheMainRecyclerViews()
+                Log.d("teste5555", "${binding.searchView.query}")
+            } else {
+                dismissTheMainRecyclerViews()
+                Log.d("teste5555", "${binding.searchView.query}")
+                viewModel.searchMoviesByTerm(binding.searchView.query.toString())
+            }
         }
     }
 
@@ -98,29 +118,36 @@ class HomeFragment : Fragment() {
         }
     }
 
+    @OptIn(FlowPreview::class)
     private fun searchMovieByTerm() {
-        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean = false
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                if (!newText.isNullOrBlank() && newText.isNotEmpty()) {
-                    dismissTheMainRecyclerViews()
-                    binding.rvSearchMovie.isVisible = true
-                    observeSearch(newText)
-                } else {
-                    binding.rvSearchMovie.isGone = true
-                    admitsTheMainRecyclerViews()
-                }
-                return false
+        lifecycleScope.launch(Dispatchers.IO) {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                binding.searchView.getQueryTextChangeStateFlow().debounce(300)
+                    .distinctUntilChanged().collectLatest {
+                        if (!it.isNullOrBlank() && it.isNotEmpty()) {
+                            viewModel.searchMoviesByTerm(it)
+                            withContext(Dispatchers.Main) {
+                                dismissTheMainRecyclerViews()
+                            }
+                        } else {
+                            if (binding.searchView.query.isEmpty()) {
+                                withContext(Dispatchers.Main) {
+                                    admitsTheMainRecyclerViews()
+                                }
+                            }
+                        }
+                    }
             }
-        })
+        }
     }
 
-    private fun observeSearch(query: String) {
+    private fun observeSearch() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.searchMoviesByTerm(query).collectLatest { pagingData ->
-                    searchAdapter.submitData(lifecycle, pagingData)
+                launch {
+                    viewModel.searchedMovie.collectLatest { pagingData ->
+                        searchAdapter.submitData(pagingData)
+                    }
                 }
             }
         }
@@ -145,27 +172,33 @@ class HomeFragment : Fragment() {
         binding.upcomingMoviesTitle.isVisible = true
         binding.rvSearchMovie.isGone = true
     }
-    private fun setupStatesOfRvs() {
-        viewLifecycleOwner.lifecycleScope.launch {
+    private fun setupLoadStatesOfRvs() {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                trendingAdapter.loadStateFlow.collectLatest { loadStates ->
-                    binding.rvTrendingMovies.isVisible =
-                        loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query.isEmpty()
-                    binding.trendingMoviesTitle.isVisible =
-                        loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query.isEmpty() && trendingAdapter.itemCount != 0
-                    binding.rvPopularMovies.isVisible =
-                        loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query.isEmpty()
-                    binding.popularMoviesTitle.isVisible =
-                        loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query.isEmpty() && trendingAdapter.itemCount != 0
-                    binding.rvUpcomingMovies.isVisible =
-                        loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query.isEmpty()
-                    binding.upcomingMoviesTitle.isVisible =
-                        loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query.isEmpty() && trendingAdapter.itemCount != 0
-                    handleError(loadStates)
-                    binding.loadBar.isVisible = loadStates.source.refresh is LoadState.Loading
-                    binding.errorMessage.isVisible = loadStates.source.refresh is LoadState.Error
-                    binding.rvSearchMovie.isVisible =
-                        loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query != null && binding.searchView.query != "" && binding.searchView.query != " "
+                launch {
+                    trendingAdapter.loadStateFlow.collectLatest { loadStates ->
+                        binding.rvTrendingMovies.isVisible =
+                            loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query.isEmpty()
+                        binding.trendingMoviesTitle.isVisible =
+                            loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query.isEmpty() && trendingAdapter.itemCount != 0
+                        binding.rvPopularMovies.isVisible =
+                            loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query.isEmpty()
+                        binding.popularMoviesTitle.isVisible =
+                            loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query.isEmpty() && trendingAdapter.itemCount != 0
+                        binding.rvUpcomingMovies.isVisible =
+                            loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query.isEmpty()
+                        binding.upcomingMoviesTitle.isVisible =
+                            loadStates.source.refresh is LoadState.NotLoading && binding.searchView.query.isEmpty() && trendingAdapter.itemCount != 0
+                        handleError(loadStates)
+                        binding.loadBar.isVisible = loadStates.source.refresh is LoadState.Loading
+                        binding.errorMessage.isVisible = loadStates.source.refresh is LoadState.Error
+                    }
+                }
+                launch {
+                    searchAdapter.loadStateFlow.collectLatest { loadStates ->
+                        binding.loadBar.isVisible = loadStates.source.refresh is LoadState.Loading
+                        handleError(loadStates)
+                    }
                 }
             }
         }

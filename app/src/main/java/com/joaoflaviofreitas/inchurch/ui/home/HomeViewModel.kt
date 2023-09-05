@@ -11,7 +11,6 @@ import com.joaoflaviofreitas.inchurch.domain.usecases.GetUpcomingMovies
 import com.joaoflaviofreitas.inchurch.domain.usecases.SearchMoviesByTerm
 import com.joaoflaviofreitas.inchurch.utils.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -70,5 +69,12 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun searchMoviesByTerm(query: String): Flow<PagingData<Movie>> = searchMoviesByTerm.execute(query = query).cachedIn(viewModelScope)
+    fun searchMoviesByTerm(query: String) {
+        viewModelScope.launch(dispatcherProvider.io) {
+            searchMoviesByTerm.execute(query = query).cachedIn(viewModelScope)
+                .collectLatest {
+                    _searchedMovie.value = it
+                }
+        }
+    }
 }
