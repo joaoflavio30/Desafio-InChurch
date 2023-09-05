@@ -57,4 +57,3 @@ Para facilitar a sua vida, padronizar e explorar algumas habilidades suas, estam
 ## Alguma d�vida?
 
 * E-mail: fernando.lima@inchurch.com.br
->>>>>>> 60257d398867714427efc1433c224a8d3029a4ca
