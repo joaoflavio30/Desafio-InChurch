@@ -115,7 +115,8 @@ class HomeViewModelTest {
             searchMoviesByTerm,
             dispatcherProvider,
         )
-        viewModel.searchMoviesByTerm("Movie Title").test {
+        viewModel.searchMoviesByTerm("")
+        viewModel.searchedMovie.test {
             assertTrue(awaitItem() != PagingData.empty<Movie>())
         }
     }

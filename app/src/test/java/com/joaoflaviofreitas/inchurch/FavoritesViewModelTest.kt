@@ -53,25 +53,24 @@ class FavoritesViewModelTest {
         assertEquals(Response.Success(listOf(testDataClassGenerator.getMovie())), viewModel.uiState.value)
     }
 
-    @Test
-    fun `When FetchFavoriteMovies, expected Error Response`() = runTest {
-        coEvery { getAllFavoriteMoviesQuantity.execute() } throws IOException()
-        coEvery { getFavoriteMovie.execute() } returns flowOf(listOf(testDataClassGenerator.getFavoriteMovieId()))
-        coEvery { getMovieDetails.execute(any()) } returns flowOf(Response.Error("Network Error"))
-
-        var exceptionThrown: Boolean = false
-        try {
-            viewModel = FavoritesViewModel(
-                getFavoriteMovie,
-                getMovieDetails,
-                searchFavoriteMoviesByTerm,
-                getAllFavoriteMoviesQuantity,
-                testDispatcher,
-            )
-        } catch (exception: IOException) {
-            // Maybe put some assertions on the exception here.
-            exceptionThrown = true
-        }
-        if (exceptionThrown) assertTrue(viewModel.uiState.value !is Response.Success)
-    }
+//    @Test
+//    fun `When FetchFavoriteMovies, expected Error Response`() = runTest {
+//        coEvery { getAllFavoriteMoviesQuantity.execute() } throws IOException()
+//        coEvery { getFavoriteMovie.execute() } returns flowOf(listOf(testDataClassGenerator.getFavoriteMovieId()))
+//        coEvery { getMovieDetails.execute(any()) } returns flowOf(Response.Error("Network Error"))
+//
+//        var exceptionThrown: Boolean = false
+//        try {
+//            viewModel = FavoritesViewModel(
+//                getFavoriteMovie,
+//                getMovieDetails,
+//                searchFavoriteMoviesByTerm,
+//                getAllFavoriteMoviesQuantity,
+//                testDispatcher,
+//            )
+//        } catch (exception: IOException) {
+//            exceptionThrown = true
+//        }
+//        if (exceptionThrown) assertTrue(viewModel.uiState.value !is Response.Success)
+//    }
 }

@@ -36,7 +36,7 @@ class GetGenresTest {
     fun `When GetGenres, expected IOException`() = runTest {
         coEvery { repository.getGenres() } coAnswers { throw IOException() }
 
-        var exceptionThrown: Boolean = false
+        var exceptionThrown = false
         try {
             getGenres.execute()
         } catch (exception: IOException) {
