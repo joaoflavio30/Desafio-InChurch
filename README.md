@@ -1,7 +1,7 @@
 inChurch Movies
 =============================
 
-![Alt text](https://bitbucket.org/inradar/inchurch-android-challenge/raw/0be3880f3ef7befaae9a5e3f7d7a4c90c9287e46/images/img1.png) ![Alt text](https://bitbucket.org/inradar/inchurch-android-challenge/raw/0be3880f3ef7befaae9a5e3f7d7a4c90c9287e46/images/img2.png) ![Alt text](https://bitbucket.org/inradar/inchurch-android-challenge/raw/0be3880f3ef7befaae9a5e3f7d7a4c90c9287e46/images/img3.png)
+![Alt text](images/Screenshot_20230905_012657.png) ![Alt text](images/Screenshot_20230905_012755.png) ![Alt text](images/Screenshot_20230905_012939.png)![Alt text](images/Screenshot_20230905_033127.png)
 
 Features
 =============================
