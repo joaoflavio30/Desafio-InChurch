@@ -2,10 +2,10 @@ package com.joaoflaviofreitas.inchurch
 import androidx.paging.PagingData
 import app.cash.turbine.test
 import com.joaoflaviofreitas.inchurch.domain.model.Movie
-import com.joaoflaviofreitas.inchurch.domain.usecases.GetPopularMovies
-import com.joaoflaviofreitas.inchurch.domain.usecases.GetTrendingMovies
-import com.joaoflaviofreitas.inchurch.domain.usecases.GetUpcomingMovies
-import com.joaoflaviofreitas.inchurch.domain.usecases.SearchMoviesByTerm
+import com.joaoflaviofreitas.inchurch.domain.usecases.GetPopularMoviesImpl
+import com.joaoflaviofreitas.inchurch.domain.usecases.GetTrendingMoviesImpl
+import com.joaoflaviofreitas.inchurch.domain.usecases.GetUpcomingMoviesImpl
+import com.joaoflaviofreitas.inchurch.domain.usecases.SearchMoviesByTermImpl
 import com.joaoflaviofreitas.inchurch.ui.home.HomeViewModel
 import com.joaoflaviofreitas.inchurch.utils.MainDispatcherRule
 import com.joaoflaviofreitas.inchurch.utils.TestDataClassGenerator
@@ -24,13 +24,13 @@ import org.junit.runners.JUnit4
 @RunWith(JUnit4::class)
 class HomeViewModelTest {
 
-    private val getTrendingMovies: GetTrendingMovies = mockk()
+    private val getTrendingMovies: GetTrendingMoviesImpl = mockk()
 
-    private val getPopularMovies: GetPopularMovies = mockk()
+    private val getPopularMovies: GetPopularMoviesImpl = mockk()
 
-    private val getUpcomingMovies: GetUpcomingMovies = mockk()
+    private val getUpcomingMovies: GetUpcomingMoviesImpl = mockk()
 
-    private val searchMoviesByTerm: SearchMoviesByTerm = mockk()
+    private val searchMoviesByTerm: SearchMoviesByTermImpl = mockk()
 
     private var dispatcherProvider = TestDispatcherProvider()
 

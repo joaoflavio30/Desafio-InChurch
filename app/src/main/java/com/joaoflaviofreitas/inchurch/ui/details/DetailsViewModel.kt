@@ -26,7 +26,7 @@ class DetailsViewModel @Inject constructor(
     private val getGenres: GetGenres,
     private val addFavoriteMovie: AddFavoriteMovie,
     private val deleteFavoriteMovie: DeleteFavoriteMovie,
-    private val getMovieDetails: GetMovieDetails,
+    private val getMovieDetailsImpl: GetMovieDetails,
     private val dispatcherProvider: DispatcherProvider,
 ) : ViewModel() {
 
@@ -49,7 +49,7 @@ class DetailsViewModel @Inject constructor(
 
     fun getMovieDetails(movieId: Int) {
         viewModelScope.launch(dispatcherProvider.io) {
-            getMovieDetails.execute(movieId).collectLatest {
+            getMovieDetailsImpl.execute(movieId).collectLatest {
                 _uiState.value = it
             }
         }

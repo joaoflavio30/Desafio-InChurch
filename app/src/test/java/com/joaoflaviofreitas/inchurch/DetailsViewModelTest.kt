@@ -4,10 +4,10 @@ import com.joaoflaviofreitas.inchurch.data.model.FavoriteMovieId
 import com.joaoflaviofreitas.inchurch.domain.model.Genre
 import com.joaoflaviofreitas.inchurch.domain.model.Movie
 import com.joaoflaviofreitas.inchurch.domain.model.Response
-import com.joaoflaviofreitas.inchurch.domain.usecases.AddFavoriteMovie
-import com.joaoflaviofreitas.inchurch.domain.usecases.DeleteFavoriteMovie
-import com.joaoflaviofreitas.inchurch.domain.usecases.GetGenres
-import com.joaoflaviofreitas.inchurch.domain.usecases.GetMovieDetails
+import com.joaoflaviofreitas.inchurch.domain.usecases.AddFavoriteMovieImpl
+import com.joaoflaviofreitas.inchurch.domain.usecases.DeleteFavoriteMovieImpl
+import com.joaoflaviofreitas.inchurch.domain.usecases.GetGenresImpl
+import com.joaoflaviofreitas.inchurch.domain.usecases.GetMovieDetailsImpl
 import com.joaoflaviofreitas.inchurch.ui.details.DetailsViewModel
 import com.joaoflaviofreitas.inchurch.utils.TestDataClassGenerator
 import io.mockk.coEvery
@@ -21,10 +21,10 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 class DetailsViewModelTest {
 
-    private val getGenres: GetGenres = mockk(relaxed = true)
-    private val addFavoriteMovie: AddFavoriteMovie = mockk()
-    private val deleteFavoriteMovie: DeleteFavoriteMovie = mockk()
-    private val getMovieDetails: GetMovieDetails = mockk()
+    private val getGenres: GetGenresImpl = mockk(relaxed = true)
+    private val addFavoriteMovie: AddFavoriteMovieImpl = mockk()
+    private val deleteFavoriteMovie: DeleteFavoriteMovieImpl = mockk()
+    private val getMovieDetailsImpl: GetMovieDetailsImpl = mockk()
 
     private val testDispatcher = TestDispatcherProvider()
 
@@ -32,7 +32,7 @@ class DetailsViewModelTest {
         getGenres,
         addFavoriteMovie,
         deleteFavoriteMovie,
-        getMovieDetails,
+        getMovieDetailsImpl,
         testDispatcher,
     )
 
@@ -40,7 +40,7 @@ class DetailsViewModelTest {
     fun `Given UiState, When GetMovieDetails, Then Returns Success`() = runTest {
         // Given
         val expected = Response.Success(movie)
-        coEvery { getMovieDetails.execute(any()) } returns flow { emit(expected) }
+        coEvery { getMovieDetailsImpl.execute(any()) } returns flow { emit(expected) }
 
         // When
         viewModel.getMovieDetails(movie.id)
@@ -52,7 +52,7 @@ class DetailsViewModelTest {
     @Test
     fun `Given Error, When GetMovieDetails, then expected error`() = runTest {
         val expected = Response.Error("Network Error")
-        coEvery { getMovieDetails.execute(movie.id) } returns flow { emit(Response.Error("Network Error")) }
+        coEvery { getMovieDetailsImpl.execute(movie.id) } returns flow { emit(Response.Error("Network Error")) }
 
         // When
         viewModel.getMovieDetails(movie.id)
@@ -65,7 +65,7 @@ class DetailsViewModelTest {
         runTest {
             val expected = true
             movie.isFavorite = false
-            coEvery { getMovieDetails.execute(any()) } returns flow { emit(Response.Success(movie)) }
+            coEvery { getMovieDetailsImpl.execute(any()) } returns flow { emit(Response.Success(movie)) }
             coEvery { addFavoriteMovie.execute(any()) } coAnswers {
                 movie.isFavorite = expected
             }
@@ -88,7 +88,7 @@ class DetailsViewModelTest {
         runTest {
             val expected = false
             movie.isFavorite = true
-            coEvery { getMovieDetails.execute(any()) } returns flow { emit(Response.Success(movie)) }
+            coEvery { getMovieDetailsImpl.execute(any()) } returns flow { emit(Response.Success(movie)) }
             coEvery { deleteFavoriteMovie.execute(any()) } coAnswers {
                 movie.isFavorite = expected
             }
@@ -112,7 +112,7 @@ class DetailsViewModelTest {
         coEvery { getGenres.execute() } returns flow { emit(expected) }
 
         // When (Initialize ViewModel)
-        viewModel = DetailsViewModel(getGenres, addFavoriteMovie, deleteFavoriteMovie, getMovieDetails, testDispatcher)
+        viewModel = DetailsViewModel(getGenres, addFavoriteMovie, deleteFavoriteMovie, getMovieDetailsImpl, testDispatcher)
 
         val result = viewModel.genres.value
 
@@ -126,7 +126,7 @@ class DetailsViewModelTest {
         coEvery { getGenres.execute() } returns flow { emit(expected) }
 
         // When (Initialize ViewModel)
-        viewModel = DetailsViewModel(getGenres, addFavoriteMovie, deleteFavoriteMovie, getMovieDetails, testDispatcher)
+        viewModel = DetailsViewModel(getGenres, addFavoriteMovie, deleteFavoriteMovie, getMovieDetailsImpl, testDispatcher)
 
         val result = viewModel.genres.value
 

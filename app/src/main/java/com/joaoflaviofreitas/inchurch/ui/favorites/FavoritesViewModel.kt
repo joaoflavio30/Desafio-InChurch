@@ -21,7 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class FavoritesViewModel @Inject constructor(
     private val getFavoriteMovies: GetFavoriteMovies,
-    private val getMovieDetails: GetMovieDetails,
+    private val getMovieDetailsImpl: GetMovieDetails,
     private val searchFavoriteMoviesByTerm: SearchFavoriteMoviesByTerm,
     private val getAllFavoriteMoviesQuantity: GetAllFavoriteMoviesQuantity,
     private val dispatcherProvider: DispatcherProvider,
@@ -33,6 +33,7 @@ class FavoritesViewModel @Inject constructor(
 
     private val _favoriteMovies: MutableStateFlow<Response<List<FavoriteMovieId>>> =
         MutableStateFlow(Response.Loading)
+    val favoriteMovies = _favoriteMovies.asStateFlow()
 
     private val _quantityFavoriteMovies: MutableStateFlow<Int?> = MutableStateFlow(null)
     val quantityFavoriteMovie = _quantityFavoriteMovies
@@ -57,7 +58,7 @@ class FavoritesViewModel @Inject constructor(
         viewModelScope.launch(dispatcherProvider.io) {
             val newList = mutableListOf<Movie>()
             list.forEach {
-                getMovieDetails.execute(it.id).collectLatest { response ->
+                getMovieDetailsImpl.execute(it.id).collectLatest { response ->
                     when (response) {
                         is Response.Success -> {
                             newList.add(response.data)
@@ -81,7 +82,6 @@ class FavoritesViewModel @Inject constructor(
     private suspend fun bindDataInUiStateWhenFinishedList(newList: MutableList<Movie>, list: List<FavoriteMovieId>) {
         if (newList.size == list.size) _uiState.emit(Response.Success(newList))
     }
-
     fun searchFavoriteMovie(term: String) {
         _uiState.value = Response.Success(mutableListOf())
         viewModelScope.launch(dispatcherProvider.io) {
