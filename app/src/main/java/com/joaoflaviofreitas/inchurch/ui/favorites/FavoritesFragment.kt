@@ -87,12 +87,10 @@ class FavoritesFragment : Fragment() {
 
                         is Response.Error -> {
                             handleError(response.errorMessage)
-                            binding.notFoundMovie.isVisible = false
                         }
 
                         is Response.Loading -> {
                             handleLoading()
-                            binding.notFoundMovie.isVisible = false
                         }
                     }
                 }
@@ -111,6 +109,24 @@ class FavoritesFragment : Fragment() {
             }
         }
     }
+
+    private fun movieIsFound() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.favoriteMovies.collectLatest { response ->
+                    when (response) {
+                        is Response.Error -> {
+                            binding.notFoundMovie.isVisible = true
+                        }
+                        else -> {
+                            binding.notFoundMovie.isVisible = false
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private fun handleLoading() {
         binding.loadBar.isVisible = true
         binding.errorMessage.isGone = true

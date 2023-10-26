@@ -33,6 +33,7 @@ class FavoritesViewModel @Inject constructor(
 
     private val _favoriteMovies: MutableStateFlow<Response<List<FavoriteMovieId>>> =
         MutableStateFlow(Response.Loading)
+    val favoriteMovies = _favoriteMovies.asStateFlow()
 
     private val _quantityFavoriteMovies: MutableStateFlow<Int?> = MutableStateFlow(null)
     val quantityFavoriteMovie = _quantityFavoriteMovies
