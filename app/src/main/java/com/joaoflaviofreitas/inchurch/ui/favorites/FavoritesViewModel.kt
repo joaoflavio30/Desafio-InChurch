@@ -81,7 +81,6 @@ class FavoritesViewModel @Inject constructor(
     private suspend fun bindDataInUiStateWhenFinishedList(newList: MutableList<Movie>, list: List<FavoriteMovieId>) {
         if (newList.size == list.size) _uiState.emit(Response.Success(newList))
     }
-
     fun searchFavoriteMovie(term: String) {
         _uiState.value = Response.Success(mutableListOf())
         viewModelScope.launch(dispatcherProvider.io) {
