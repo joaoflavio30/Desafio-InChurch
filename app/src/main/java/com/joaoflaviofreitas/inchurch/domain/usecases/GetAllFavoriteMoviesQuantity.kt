@@ -1,9 +1,8 @@
 package com.joaoflaviofreitas.inchurch.domain.usecases
 
-import com.joaoflaviofreitas.inchurch.domain.repository.MovieRepository
 import kotlinx.coroutines.flow.Flow
 
-class GetAllFavoriteMoviesQuantity(private val repository: MovieRepository) {
+interface GetAllFavoriteMoviesQuantity {
 
-    fun execute(): Flow<Int> = repository.getAllFavoriteMoviesQuantity()
+    fun execute(): Flow<Int>
 }

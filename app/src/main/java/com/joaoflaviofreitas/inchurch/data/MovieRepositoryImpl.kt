@@ -10,7 +10,7 @@ import com.joaoflaviofreitas.inchurch.data.model.ResponseGenre
 import com.joaoflaviofreitas.inchurch.data.model.ResponseMovie
 import com.joaoflaviofreitas.inchurch.domain.model.Response
 import com.joaoflaviofreitas.inchurch.domain.repository.MovieRepository
-import com.joaoflaviofreitas.inchurch.paging.MoviesPagingSource
+import com.joaoflaviofreitas.inchurch.data.paging.MoviesPagingSource
 import com.joaoflaviofreitas.inchurch.utils.Constants.API_KEY
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

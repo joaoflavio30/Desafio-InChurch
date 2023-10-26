@@ -1,4 +1,4 @@
-package com.joaoflaviofreitas.inchurch.paging
+package com.joaoflaviofreitas.inchurch.data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState

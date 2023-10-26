@@ -2,7 +2,7 @@ package com.joaoflaviofreitas.inchurch.domain
 
 import com.joaoflaviofreitas.inchurch.data.model.ResponseGenre
 import com.joaoflaviofreitas.inchurch.domain.repository.MovieRepository
-import com.joaoflaviofreitas.inchurch.domain.usecases.GetGenres
+import com.joaoflaviofreitas.inchurch.domain.usecases.GetGenresImpl
 import com.joaoflaviofreitas.inchurch.utils.TestDataClassGenerator
 import com.joaoflaviofreitas.inchurch.utils.toGenre
 import io.mockk.coEvery
@@ -19,7 +19,7 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 class GetGenresTest {
     private val repository: MovieRepository = mockk()
-    private val getGenres = GetGenres(repository)
+    private val getGenres = GetGenresImpl(repository)
     private val testDataClassGenerator = TestDataClassGenerator()
 
     @Test

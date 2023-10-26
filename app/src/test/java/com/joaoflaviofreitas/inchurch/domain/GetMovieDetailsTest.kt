@@ -2,7 +2,7 @@ package com.joaoflaviofreitas.inchurch.domain
 
 import com.joaoflaviofreitas.inchurch.domain.model.Response
 import com.joaoflaviofreitas.inchurch.domain.repository.MovieRepository
-import com.joaoflaviofreitas.inchurch.domain.usecases.GetMovieDetails
+import com.joaoflaviofreitas.inchurch.domain.usecases.GetMovieDetailsImpl
 import com.joaoflaviofreitas.inchurch.utils.TestDataClassGenerator
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -16,7 +16,7 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 class GetMovieDetailsTest {
     private val repository: MovieRepository = mockk()
-    private val getMovieDetails = GetMovieDetails(repository)
+    private val getMovieDetailsImpl = GetMovieDetailsImpl(repository)
     private val testDataClassGenerator = TestDataClassGenerator()
 
     @Test
@@ -25,7 +25,7 @@ class GetMovieDetailsTest {
         coEvery { repository.getMovieDetails(any()) } returns flow { emit(Response.Success(modelExpected)) }
         coEvery { repository.isMovieFavorite(any()) } returns true
 
-        val result = getMovieDetails.execute(123).first()
+        val result = getMovieDetailsImpl.execute(123).first()
 
         assertTrue(result is Response.Success)
     }
@@ -35,7 +35,7 @@ class GetMovieDetailsTest {
         coEvery { repository.getMovieDetails(any()) } returns flow { emit(Response.Error("Network Error")) }
         coEvery { repository.isMovieFavorite(any()) } returns true
 
-        val result = getMovieDetails.execute(123).first()
+        val result = getMovieDetailsImpl.execute(123).first()
 
         assertTrue(result is Response.Error)
     }

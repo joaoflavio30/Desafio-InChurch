@@ -21,7 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class FavoritesViewModel @Inject constructor(
     private val getFavoriteMovies: GetFavoriteMovies,
-    private val getMovieDetails: GetMovieDetails,
+    private val getMovieDetailsImpl: GetMovieDetails,
     private val searchFavoriteMoviesByTerm: SearchFavoriteMoviesByTerm,
     private val getAllFavoriteMoviesQuantity: GetAllFavoriteMoviesQuantity,
     private val dispatcherProvider: DispatcherProvider,
@@ -57,7 +57,7 @@ class FavoritesViewModel @Inject constructor(
         viewModelScope.launch(dispatcherProvider.io) {
             val newList = mutableListOf<Movie>()
             list.forEach {
-                getMovieDetails.execute(it.id).collectLatest { response ->
+                getMovieDetailsImpl.execute(it.id).collectLatest { response ->
                     when (response) {
                         is Response.Success -> {
                             newList.add(response.data)
