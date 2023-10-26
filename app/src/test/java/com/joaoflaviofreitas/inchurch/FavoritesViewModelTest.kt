@@ -19,7 +19,6 @@ import org.junit.Test
 
 @ExperimentalCoroutinesApi
 class FavoritesViewModelTest {
-
     private val getFavoriteMovie: GetFavoriteMoviesImpl = mockk()
     private val getMovieDetailsImpl: GetMovieDetailsImpl = mockk()
     private val searchFavoriteMoviesByTerm: SearchFavoriteMoviesByTermImpl = mockk()

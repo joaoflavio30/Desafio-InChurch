@@ -2,7 +2,11 @@ package com.joaoflaviofreitas.inchurch.domain
 
 import com.joaoflaviofreitas.inchurch.data.model.ResponseGenre
 import com.joaoflaviofreitas.inchurch.domain.repository.MovieRepository
+<<<<<<< HEAD
 import com.joaoflaviofreitas.inchurch.domain.usecases.GetGenresImpl
+=======
+import com.joaoflaviofreitas.inchurch.domain.usecases.GetGenres
+>>>>>>> dd53c58 (add more unittests)
 import com.joaoflaviofreitas.inchurch.utils.TestDataClassGenerator
 import com.joaoflaviofreitas.inchurch.utils.toGenre
 import io.mockk.coEvery
@@ -19,7 +23,11 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 class GetGenresTest {
     private val repository: MovieRepository = mockk()
+<<<<<<< HEAD
     private val getGenres = GetGenresImpl(repository)
+=======
+    private val getGenres = GetGenres(repository)
+>>>>>>> dd53c58 (add more unittests)
     private val testDataClassGenerator = TestDataClassGenerator()
 
     @Test
@@ -36,7 +44,11 @@ class GetGenresTest {
     fun `When GetGenres, expected IOException`() = runTest {
         coEvery { repository.getGenres() } coAnswers { throw IOException() }
 
+<<<<<<< HEAD
         var exceptionThrown = false
+=======
+        var exceptionThrown: Boolean = false
+>>>>>>> dd53c58 (add more unittests)
         try {
             getGenres.execute()
         } catch (exception: IOException) {
