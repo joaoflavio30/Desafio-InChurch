@@ -1,4 +1,4 @@
-package com.joaoflaviofreitas.inchurch.data.api
+package com.joaoflaviofreitas.inchurch.data.remote.service.api
 
 import android.content.Context
 import android.net.ConnectivityManager

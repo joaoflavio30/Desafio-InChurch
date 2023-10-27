@@ -1,87 +1,34 @@
 package com.joaoflaviofreitas.inchurch.data
 
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.joaoflaviofreitas.inchurch.data.api.MovieApi
 import com.joaoflaviofreitas.inchurch.data.local.MovieDao
-import com.joaoflaviofreitas.inchurch.data.model.FavoriteMovieId
-import com.joaoflaviofreitas.inchurch.data.model.ResponseGenre
-import com.joaoflaviofreitas.inchurch.data.model.ResponseMovie
+import com.joaoflaviofreitas.inchurch.data.local.model.FavoriteMovieId
+import com.joaoflaviofreitas.inchurch.data.remote.data_sources.MovieRemoteDataSource
+import com.joaoflaviofreitas.inchurch.data.remote.model.ResponseGenre
+import com.joaoflaviofreitas.inchurch.data.remote.model.ResponseMovie
 import com.joaoflaviofreitas.inchurch.domain.model.Response
 import com.joaoflaviofreitas.inchurch.domain.repository.MovieRepository
-import com.joaoflaviofreitas.inchurch.data.paging.MoviesPagingSource
-import com.joaoflaviofreitas.inchurch.utils.Constants.API_KEY
+import com.joaoflaviofreitas.inchurch.utils.Constants.ERROR_MESSAGE
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
 import okio.IOException
-import retrofit2.HttpException
 import javax.inject.Inject
 
-class MovieRepositoryImpl @Inject constructor(private val movieApi: MovieApi, private val movieDao: MovieDao) : MovieRepository {
-    override fun getTrendingMovies(page: Int): Flow<PagingData<ResponseMovie>> = Pager(
-        config = PagingConfig(
-            pageSize = 20,
-            maxSize = 60,
-            enablePlaceholders = true,
-        ),
-        pagingSourceFactory = {
-            MoviesPagingSource(movieApi, MoviesPagingSource.PagingType.TRENDING_MOVIES)
-        },
-    ).flow
+class MovieRepositoryImpl @Inject constructor(
+    private val remoteDataSource: MovieRemoteDataSource,
+    private val movieDao: MovieDao,
+) : MovieRepository {
+    override fun getTrendingMovies(page: Int): Flow<PagingData<ResponseMovie>> = remoteDataSource.getTrendingMovies(page)
 
-    override fun getPopularMovies(page: Int): Flow<PagingData<ResponseMovie>> =
-        Pager(
-            config = PagingConfig(
-                pageSize = 20,
-                maxSize = 60,
-            ),
-            pagingSourceFactory = {
-                MoviesPagingSource(
-                    movieApi,
-                    MoviesPagingSource.PagingType.POPULAR_MOVIES,
-                )
-            },
-        ).flow
+    override fun getPopularMovies(page: Int): Flow<PagingData<ResponseMovie>> = remoteDataSource.getPopularMovies(page)
 
-    override fun getUpcomingMovies(page: Int): Flow<PagingData<ResponseMovie>> = Pager(
-        config = PagingConfig(
-            pageSize = 20,
-            maxSize = 60,
-        ),
-        pagingSourceFactory = {
-            MoviesPagingSource(
-                movieApi,
-                MoviesPagingSource.PagingType.UPCOMING_MOVIES,
-            )
-        },
-    ).flow
+    override fun getUpcomingMovies(page: Int): Flow<PagingData<ResponseMovie>> = remoteDataSource.getUpcomingMovies(page)
 
-    override fun searchMoviesByTerm(page: Int, query: String): Flow<PagingData<ResponseMovie>> {
-        return Pager(
-            config = PagingConfig(
-                pageSize = 20,
-                maxSize = 60,
-            ),
-            pagingSourceFactory = {
-                MoviesPagingSource(
-                    movieApi,
-                    MoviesPagingSource.PagingType.SEARCH_MOVIES,
-                    query,
-                )
-            },
-        ).flow
-    }
+    override fun searchMoviesByTerm(page: Int, query: String): Flow<PagingData<ResponseMovie>> = remoteDataSource.searchMoviesByTerm(page, query)
 
-    override fun getGenres(): Flow<List<ResponseGenre>> = flow {
-        try {
-            val result = movieApi.getGenres().body()?.genres ?: emptyList()
-            emit(result)
-        } catch (e: IOException) {
-            throw IOException()
-        } catch (e: HttpException) {
-            throw e
-        }
+    override fun getGenres(): Flow<List<ResponseGenre>> = remoteDataSource.getGenres().map {
+        it.genres
     }
 
     override suspend fun insertFavoriteMovie(favoriteMovieId: FavoriteMovieId) {
@@ -105,17 +52,9 @@ class MovieRepositoryImpl @Inject constructor(private val movieApi: MovieApi, pr
     override suspend fun isMovieFavorite(id: Int): Boolean =
         movieDao.checkMovie(id) > 0
 
-    override fun getMovieDetails(id: Int): Flow<Response<ResponseMovie>> = flow {
-        try {
-            emit(Response.Loading)
-            val result = movieApi.getMovieDetails(id, API_KEY).body()
-            if (result != null) {
-                emit(Response.Success(result))
-            }
-        } catch (e: IOException) {
-            Response.Error(e.message ?: "Network Error")
-        }
-    }
+    override fun getMovieDetails(id: Int): Flow<Response<ResponseMovie>> = remoteDataSource.getMovieDetails(id).map {
+        Response.Success(it)
+    }.catch { Response.Error(it.message ?: ERROR_MESSAGE) }
 
     override fun searchFavoriteMoviesByTerm(term: String): Flow<List<FavoriteMovieId>> = movieDao.searchFavoriteMovies(term)
     override fun getAllFavoriteMoviesQuantity(): Flow<Int> = movieDao.getAllFavoriteMoviesQuantity()

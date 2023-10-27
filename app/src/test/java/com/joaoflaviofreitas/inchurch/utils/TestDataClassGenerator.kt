@@ -1,9 +1,9 @@
 package com.joaoflaviofreitas.inchurch.utils
 
 import androidx.paging.PagingData
-import com.joaoflaviofreitas.inchurch.data.model.FavoriteMovieId
-import com.joaoflaviofreitas.inchurch.data.model.ResponseGenre
-import com.joaoflaviofreitas.inchurch.data.model.ResponseMovie
+import com.joaoflaviofreitas.inchurch.data.local.model.FavoriteMovieId
+import com.joaoflaviofreitas.inchurch.data.remote.model.ResponseGenre
+import com.joaoflaviofreitas.inchurch.data.remote.model.ResponseMovie
 import com.joaoflaviofreitas.inchurch.domain.model.Genre
 import com.joaoflaviofreitas.inchurch.domain.model.Movie
 import java.util.Date

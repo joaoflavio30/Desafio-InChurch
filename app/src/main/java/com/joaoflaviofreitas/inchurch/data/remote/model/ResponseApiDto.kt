@@ -1,6 +1,6 @@
-package com.joaoflaviofreitas.inchurch.data.model
+package com.joaoflaviofreitas.inchurch.data.remote.model
 
-data class ResponseApi(
+data class ResponseApiDto(
     val page: Int,
     val results: List<ResponseMovie>,
     val totalResults: Int,

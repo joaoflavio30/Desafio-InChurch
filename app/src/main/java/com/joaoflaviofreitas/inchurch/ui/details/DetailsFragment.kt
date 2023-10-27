@@ -19,7 +19,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.joaoflaviofreitas.inchurch.BuildConfig
 import com.joaoflaviofreitas.inchurch.R
-import com.joaoflaviofreitas.inchurch.data.model.FavoriteMovieId
+import com.joaoflaviofreitas.inchurch.data.local.model.FavoriteMovieId
 import com.joaoflaviofreitas.inchurch.databinding.FragmentDetailsBinding
 import com.joaoflaviofreitas.inchurch.domain.model.Movie
 import com.joaoflaviofreitas.inchurch.domain.model.Response

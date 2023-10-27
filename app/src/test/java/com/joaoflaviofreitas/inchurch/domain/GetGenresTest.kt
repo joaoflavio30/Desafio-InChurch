@@ -1,6 +1,6 @@
 package com.joaoflaviofreitas.inchurch.domain
 
-import com.joaoflaviofreitas.inchurch.data.model.ResponseGenre
+import com.joaoflaviofreitas.inchurch.data.remote.model.ResponseGenre
 import com.joaoflaviofreitas.inchurch.domain.repository.MovieRepository
 <<<<<<< HEAD
 import com.joaoflaviofreitas.inchurch.domain.usecases.GetGenresImpl

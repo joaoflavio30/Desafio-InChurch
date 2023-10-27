@@ -1,8 +1,8 @@
 package com.joaoflaviofreitas.inchurch.utils // ktlint-disable filename
 
 import androidx.appcompat.widget.SearchView
-import com.joaoflaviofreitas.inchurch.data.model.ResponseGenre
-import com.joaoflaviofreitas.inchurch.data.model.ResponseMovie
+import com.joaoflaviofreitas.inchurch.data.remote.model.ResponseGenre
+import com.joaoflaviofreitas.inchurch.data.remote.model.ResponseMovie
 import com.joaoflaviofreitas.inchurch.domain.model.Genre
 import com.joaoflaviofreitas.inchurch.domain.model.Movie
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,25 +18,25 @@ val displayDateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
 fun ResponseMovie.toMovie(): Movie {
     return Movie(
         id = this.id,
-        backdropPath = this.backdrop_path ?: "",
+        backdropPath = this.backdropPath ?: "",
         genres = this.genres,
         isAdult = this.adult,
-        posterPath = this.poster_path ?: "",
+        posterPath = this.posterPath ?: "",
         overview = this.overview,
-        releaseDate = if (!this.release_date.isNullOrEmpty()) {
+        releaseDate = if (!this.releaseDate.isNullOrEmpty()) {
             SimpleDateFormat("yyyy-MM-dd").parse(
-                release_date,
+                releaseDate,
             )
         } else {
             Date()
         },
-        originalTitle = this.original_title,
-        originalLanguage = this.original_language,
+        originalTitle = this.originalTitle,
+        originalLanguage = this.originalLanguage,
         title = this.title,
         popularity = this.popularity,
-        voteCount = this.vote_count,
+        voteCount = this.voteCount,
         video = this.video,
-        voteAverage = decimalFormat.format(this.vote_average).replace(",", ".").toDouble(),
+        voteAverage = decimalFormat.format(this.voteAverage).replace(",", ".").toDouble(),
     )
 }
 
