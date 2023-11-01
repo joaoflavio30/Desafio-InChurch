@@ -1,4 +1,4 @@
-package com.joaoflaviofreitas.inchurch.data.local
+package com.joaoflaviofreitas.inchurch.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Delete

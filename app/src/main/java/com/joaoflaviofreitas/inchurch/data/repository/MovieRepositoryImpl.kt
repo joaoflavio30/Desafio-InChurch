@@ -1,8 +1,9 @@
-package com.joaoflaviofreitas.inchurch.data
+package com.joaoflaviofreitas.inchurch.data.repository
 
 import androidx.paging.PagingData
 import androidx.paging.map
-import com.joaoflaviofreitas.inchurch.data.local.MovieDao
+import com.joaoflaviofreitas.inchurch.common.constants.Constants.ERROR_MESSAGE
+import com.joaoflaviofreitas.inchurch.data.local.data_source.FavoriteMovieLocalDataSource
 import com.joaoflaviofreitas.inchurch.data.local.model.FavoriteMovieId
 import com.joaoflaviofreitas.inchurch.data.remote.data_sources.MovieRemoteDataSource
 import com.joaoflaviofreitas.inchurch.data.remote.model.GenresDto
@@ -11,7 +12,6 @@ import com.joaoflaviofreitas.inchurch.domain.model.Genres
 import com.joaoflaviofreitas.inchurch.domain.model.Movie
 import com.joaoflaviofreitas.inchurch.domain.model.Response
 import com.joaoflaviofreitas.inchurch.domain.repository.MovieRepository
-import com.joaoflaviofreitas.inchurch.common.constants.Constants.ERROR_MESSAGE
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 class MovieRepositoryImpl @Inject constructor(
     private val remoteDataSource: MovieRemoteDataSource,
-    private val movieDao: MovieDao,
+    private val localDataSource: FavoriteMovieLocalDataSource,
     private val mapMovieDto: (MovieDto) -> Movie,
     private val mapGenresDto: (GenresDto) -> Genres,
 ) : MovieRepository {
@@ -56,7 +56,7 @@ class MovieRepositoryImpl @Inject constructor(
 
     override suspend fun insertFavoriteMovie(favoriteMovieId: FavoriteMovieId) {
         try {
-            movieDao.addFavoriteMovie(favoriteMovieId)
+            localDataSource.addFavoriteMovie(favoriteMovieId)
         } catch (e: IOException) {
             throw IOException()
         }
@@ -64,16 +64,16 @@ class MovieRepositoryImpl @Inject constructor(
 
     override suspend fun deleteFavoriteMovie(favoriteMovieId: FavoriteMovieId) {
         try {
-            movieDao.deleteFavoriteMovie(favoriteMovieId)
+            localDataSource.deleteFavoriteMovie(favoriteMovieId)
         } catch (e: IOException) {
             throw IOException()
         }
     }
 
-    override fun getFavoriteMovies(): Flow<List<FavoriteMovieId>> = movieDao.getFavoriteMovie()
+    override fun getFavoriteMovies(): Flow<List<FavoriteMovieId>> = localDataSource.getFavoriteMovie()
 
     override suspend fun isMovieFavorite(id: Int): Boolean =
-        movieDao.checkMovie(id) > 0
+        localDataSource.checkMovie(id) > 0
 
     override fun getMovieDetails(id: Int): Flow<Response<Movie>> = flow {
         emit(Response.Loading)
@@ -81,6 +81,6 @@ class MovieRepositoryImpl @Inject constructor(
         emit(Response.Success(mapMovieDto(response)))
     }.catch { Response.Error(it.message ?: ERROR_MESSAGE) }
 
-    override fun searchFavoriteMoviesByTerm(term: String): Flow<List<FavoriteMovieId>> = movieDao.searchFavoriteMovies(term)
-    override fun getAllFavoriteMoviesQuantity(): Flow<Int> = movieDao.getAllFavoriteMoviesQuantity()
+    override fun searchFavoriteMoviesByTerm(term: String): Flow<List<FavoriteMovieId>> = localDataSource.searchFavoriteMovies(term)
+    override fun getAllFavoriteMoviesQuantity(): Flow<Int> = localDataSource.getAllFavoriteMoviesQuantity()
 }
