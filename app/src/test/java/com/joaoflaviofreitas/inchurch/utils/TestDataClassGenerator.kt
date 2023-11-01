@@ -1,21 +1,21 @@
 package com.joaoflaviofreitas.inchurch.utils
 
 import androidx.paging.PagingData
-import com.joaoflaviofreitas.inchurch.data.model.FavoriteMovieId
-import com.joaoflaviofreitas.inchurch.data.model.ResponseGenre
-import com.joaoflaviofreitas.inchurch.data.model.ResponseMovie
+import com.joaoflaviofreitas.inchurch.data.local.model.FavoriteMovieId
+import com.joaoflaviofreitas.inchurch.data.remote.model.GenreDto
+import com.joaoflaviofreitas.inchurch.data.remote.model.MovieDto
 import com.joaoflaviofreitas.inchurch.domain.model.Genre
 import com.joaoflaviofreitas.inchurch.domain.model.Movie
 import java.util.Date
 
 class TestDataClassGenerator {
 
-    fun getResponseMovie(): ResponseMovie = responseMovie
+    fun getResponseMovie(): MovieDto = movieDto
     fun getMovie(): Movie = movie
 
     fun getGenres() = genres
 
-    fun getResponseGenres() = responseGenres
+    fun getResponseGenres() = genreDtos
 
     fun getPagingDataWithMovie(): PagingData<Movie> = pagingData
 
@@ -28,10 +28,10 @@ class TestDataClassGenerator {
             Genre(3, "Science Fiction"),
         )
 
-        val responseGenres = listOf(
-            ResponseGenre(1, "Action"),
-            ResponseGenre(2, "Adventure"),
-            ResponseGenre(3, "Science Fiction"),
+        val genreDtos = listOf(
+            GenreDto(1, "Action"),
+            GenreDto(2, "Adventure"),
+            GenreDto(3, "Science Fiction"),
         )
 
         val movie = Movie(
@@ -50,7 +50,7 @@ class TestDataClassGenerator {
             backdropPath = "backdrop_path.jpg",
             genres = genres,
         )
-        val responseMovie = ResponseMovie(
+        val movieDto = MovieDto(
             id = 123,
             poster_path = "poster_path.jpg",
             adult = false,

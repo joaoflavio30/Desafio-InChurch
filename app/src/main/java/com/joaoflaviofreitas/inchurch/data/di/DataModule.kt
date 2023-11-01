@@ -2,11 +2,24 @@ package com.joaoflaviofreitas.inchurch.data.di
 
 import android.content.Context
 import androidx.room.Room
+import com.joaoflaviofreitas.inchurch.common.extensions.mapNullInputList
 import com.joaoflaviofreitas.inchurch.data.MovieRepositoryImpl
-import com.joaoflaviofreitas.inchurch.data.api.ConnectivityInterceptor
-import com.joaoflaviofreitas.inchurch.data.api.MovieApi
 import com.joaoflaviofreitas.inchurch.data.local.FavoriteMovieDatabase
 import com.joaoflaviofreitas.inchurch.data.local.MovieDao
+import com.joaoflaviofreitas.inchurch.data.mapper.mapGenreDto
+import com.joaoflaviofreitas.inchurch.data.mapper.mapGenresDto
+import com.joaoflaviofreitas.inchurch.data.mapper.mapMovieDto
+import com.joaoflaviofreitas.inchurch.data.paging.PopularMoviesPagingSource
+import com.joaoflaviofreitas.inchurch.data.paging.TrendingMoviesPagingSource
+import com.joaoflaviofreitas.inchurch.data.paging.UpcomingMoviesPagingSource
+import com.joaoflaviofreitas.inchurch.data.remote.data_sources.MovieRemoteDataSource
+import com.joaoflaviofreitas.inchurch.data.remote.data_sources.MovieRemoteDataSourceImpl
+import com.joaoflaviofreitas.inchurch.data.remote.model.GenresDto
+import com.joaoflaviofreitas.inchurch.data.remote.model.MovieDto
+import com.joaoflaviofreitas.inchurch.data.remote.service.ConnectivityInterceptor
+import com.joaoflaviofreitas.inchurch.data.remote.service.MovieApi
+import com.joaoflaviofreitas.inchurch.domain.model.Genres
+import com.joaoflaviofreitas.inchurch.domain.model.Movie
 import com.joaoflaviofreitas.inchurch.domain.repository.MovieRepository
 import dagger.Module
 import dagger.Provides
@@ -22,9 +35,21 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DataModule {
 
+    private fun makeMovieDtoMapper(): (MovieDto) -> Movie = { movieDto ->
+        mapMovieDto(movieDto)
+    }
+
+    private fun makeGenresDtoMapper(): (GenresDto) -> Genres = { genresDto ->
+        mapGenresDto(genresDto) { listGenreDto ->
+            mapNullInputList(listGenreDto) { genreDto ->
+                mapGenreDto(genreDto)
+            }
+        }
+    }
+
     @Provides
     @Singleton
-    fun provideMovieRepository(api: MovieApi, movieDao: MovieDao): MovieRepository = MovieRepositoryImpl(api, movieDao)
+    fun provideMovieRepository(remoteDataSource: MovieRemoteDataSource, movieDao: MovieDao): MovieRepository = MovieRepositoryImpl(remoteDataSource, movieDao, makeMovieDtoMapper(), makeGenresDtoMapper())
 
     @Provides
     @Singleton
@@ -60,4 +85,13 @@ object DataModule {
     @Provides
     @Singleton
     fun provideDao(database: FavoriteMovieDatabase): MovieDao = database.movieDao()
+
+    @Provides
+    @Singleton
+    fun provideMovieRemoteDataSource(
+        pagingTrendingMovies: TrendingMoviesPagingSource,
+        pagingPopularMovies: PopularMoviesPagingSource,
+        pagingUpcomingMovies: UpcomingMoviesPagingSource,
+        service: MovieApi,
+    ): MovieRemoteDataSource = MovieRemoteDataSourceImpl(pagingTrendingMovies, pagingPopularMovies, pagingUpcomingMovies, service)
 }

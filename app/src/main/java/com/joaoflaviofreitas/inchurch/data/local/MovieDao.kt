@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import com.joaoflaviofreitas.inchurch.data.model.FavoriteMovieId
+import com.joaoflaviofreitas.inchurch.data.local.model.FavoriteMovieId
 import kotlinx.coroutines.flow.Flow
 
 @Dao

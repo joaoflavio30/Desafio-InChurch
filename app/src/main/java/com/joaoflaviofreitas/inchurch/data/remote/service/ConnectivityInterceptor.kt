@@ -1,9 +1,9 @@
-package com.joaoflaviofreitas.inchurch.data.api
+package com.joaoflaviofreitas.inchurch.data.remote.service
 
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import com.joaoflaviofreitas.inchurch.utils.Constants.API_KEY
+import com.joaoflaviofreitas.inchurch.common.constants.Constants.API_KEY
 import okhttp3.Interceptor
 import okhttp3.Response
 import okio.IOException

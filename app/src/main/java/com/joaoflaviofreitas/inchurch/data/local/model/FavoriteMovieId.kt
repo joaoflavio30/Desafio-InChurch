@@ -1,4 +1,4 @@
-package com.joaoflaviofreitas.inchurch.data.model
+package com.joaoflaviofreitas.inchurch.data.local.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
