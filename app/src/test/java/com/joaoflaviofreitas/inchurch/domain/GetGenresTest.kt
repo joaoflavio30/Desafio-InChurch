@@ -1,6 +1,6 @@
 package com.joaoflaviofreitas.inchurch.domain
 
-import com.joaoflaviofreitas.inchurch.data.remote.model.ResponseGenre
+import com.joaoflaviofreitas.inchurch.data.remote.model.GenreDto
 import com.joaoflaviofreitas.inchurch.domain.repository.MovieRepository
 <<<<<<< HEAD
 import com.joaoflaviofreitas.inchurch.domain.usecases.GetGenresImpl
@@ -32,7 +32,7 @@ class GetGenresTest {
 
     @Test
     fun `When GetGenres, expected List of Genres`() = runTest {
-        val modelExpected: List<ResponseGenre> = testDataClassGenerator.getResponseGenres()
+        val modelExpected: List<GenreDto> = testDataClassGenerator.getResponseGenres()
         coEvery { repository.getGenres() } returns flow { emit(modelExpected) }
 
         val result = getGenres.execute().first()

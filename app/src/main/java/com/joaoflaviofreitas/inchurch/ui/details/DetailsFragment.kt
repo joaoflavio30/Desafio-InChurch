@@ -65,6 +65,9 @@ class DetailsFragment : Fragment() {
                 }
             }
         }
+        binding.backBtn.setOnClickListener {
+            navigateToHomeFragment()
+        }
     }
 
     private fun observeFavorite() {
@@ -110,9 +113,6 @@ class DetailsFragment : Fragment() {
                     DrawableTransitionOptions.withCrossFade(),
                 ).into(binding.movieImage)
             handleIsFavoriteMovie(movie.isFavorite)
-            backBtn.setOnClickListener {
-                navigateToHomeFragment()
-            }
             circleBar.max = 10
             circleBar.setProgress(movie.voteAverage.toInt(), true)
             scoreMovie.text = movie.voteAverage.toString()

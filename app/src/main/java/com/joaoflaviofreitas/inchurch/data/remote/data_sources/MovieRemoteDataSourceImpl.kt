@@ -7,12 +7,12 @@ import com.joaoflaviofreitas.inchurch.data.paging.PopularMoviesPagingSource
 import com.joaoflaviofreitas.inchurch.data.paging.SearchedMoviesPagingSource
 import com.joaoflaviofreitas.inchurch.data.paging.TrendingMoviesPagingSource
 import com.joaoflaviofreitas.inchurch.data.paging.UpcomingMoviesPagingSource
-import com.joaoflaviofreitas.inchurch.data.remote.model.ResponseGenreApiDto
-import com.joaoflaviofreitas.inchurch.data.remote.model.ResponseMovie
-import com.joaoflaviofreitas.inchurch.data.remote.service.api.MovieApi
+import com.joaoflaviofreitas.inchurch.data.remote.model.GenresDto
+import com.joaoflaviofreitas.inchurch.data.remote.model.MovieDto
+import com.joaoflaviofreitas.inchurch.data.remote.service.MovieApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
 import javax.inject.Inject
 
 class MovieRemoteDataSourceImpl @Inject constructor(
@@ -21,7 +21,7 @@ class MovieRemoteDataSourceImpl @Inject constructor(
     private val pagingUpcomingMovies: UpcomingMoviesPagingSource,
     private val service: MovieApi,
 ) : MovieRemoteDataSource {
-    override fun getTrendingMovies(page: Int): Flow<PagingData<ResponseMovie>> = Pager(
+    override fun getTrendingMovies(page: Int): Flow<PagingData<MovieDto>> = Pager(
         config = PagingConfig(
             pageSize = 20,
             maxSize = 60,
@@ -34,7 +34,7 @@ class MovieRemoteDataSourceImpl @Inject constructor(
         throw it
     }
 
-    override fun getPopularMovies(page: Int): Flow<PagingData<ResponseMovie>> = Pager(
+    override fun getPopularMovies(page: Int): Flow<PagingData<MovieDto>> = Pager(
         config = PagingConfig(
             pageSize = 20,
             maxSize = 60,
@@ -47,7 +47,7 @@ class MovieRemoteDataSourceImpl @Inject constructor(
         throw it
     }
 
-    override fun getUpcomingMovies(page: Int): Flow<PagingData<ResponseMovie>> = Pager(
+    override fun getUpcomingMovies(page: Int): Flow<PagingData<MovieDto>> = Pager(
         config = PagingConfig(
             pageSize = 20,
             maxSize = 60,
@@ -60,8 +60,7 @@ class MovieRemoteDataSourceImpl @Inject constructor(
         throw it
     }
 
-    override fun searchMoviesByTerm(page: Int, query: String): Flow<PagingData<ResponseMovie>> {
-
+    override fun searchMoviesByTerm(page: Int, query: String): Flow<PagingData<MovieDto>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 20,
@@ -76,16 +75,21 @@ class MovieRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-
-    override fun getGenres(): Flow<ResponseGenreApiDto> = flow<ResponseGenreApiDto> {
-        service.getGenres()
-    }.catch {
-        throw it
+    override suspend fun getGenres(): GenresDto {
+        val response = service.getGenres()
+        if (response.isSuccessful) {
+            return response.body()!!
+        } else {
+            throw HttpException(response)
+        }
     }
 
-    override fun getMovieDetails(id: Int): Flow<ResponseMovie> = flow<ResponseMovie> {
-        service.getMovieDetails(id)
-    }.catch {
-        throw it
+    override suspend fun getMovieDetails(id: Int): MovieDto {
+        val response = service.getMovieDetails(id)
+        if (response.isSuccessful) {
+            return response.body()!!
+        } else {
+            throw HttpException(response)
+        }
     }
 }

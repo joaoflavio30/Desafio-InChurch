@@ -78,7 +78,7 @@ class DetailsViewModel @Inject constructor(
     private fun fetchGenres() {
         viewModelScope.launch(dispatcherProvider.io) {
             getGenres.execute().collectLatest {
-                _genres.value = it
+                _genres.value = it.genres
             }
         }
     }

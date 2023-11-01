@@ -1,21 +1,21 @@
 package com.joaoflaviofreitas.inchurch.data.remote.data_sources
 
 import androidx.paging.PagingData
-import com.joaoflaviofreitas.inchurch.data.remote.model.ResponseGenreApiDto
-import com.joaoflaviofreitas.inchurch.data.remote.model.ResponseMovie
+import com.joaoflaviofreitas.inchurch.data.remote.model.GenresDto
+import com.joaoflaviofreitas.inchurch.data.remote.model.MovieDto
 import kotlinx.coroutines.flow.Flow
 
 interface MovieRemoteDataSource {
 
-    fun getTrendingMovies(page: Int): Flow<PagingData<ResponseMovie>>
+    fun getTrendingMovies(page: Int): Flow<PagingData<MovieDto>>
 
-    fun getPopularMovies(page: Int): Flow<PagingData<ResponseMovie>>
+    fun getPopularMovies(page: Int): Flow<PagingData<MovieDto>>
 
-    fun getUpcomingMovies(page: Int): Flow<PagingData<ResponseMovie>>
+    fun getUpcomingMovies(page: Int): Flow<PagingData<MovieDto>>
 
-    fun searchMoviesByTerm(page: Int, query: String): Flow<PagingData<ResponseMovie>>
+    fun searchMoviesByTerm(page: Int, query: String): Flow<PagingData<MovieDto>>
 
-    fun getGenres(): Flow<ResponseGenreApiDto>
+    suspend fun getGenres(): GenresDto
 
-    fun getMovieDetails(id: Int): Flow<ResponseMovie>
+    suspend fun getMovieDetails(id: Int): MovieDto
 }

@@ -1,4 +1,4 @@
-package com.joaoflaviofreitas.inchurch.utils
+package com.joaoflaviofreitas.inchurch.common.constants
 
 import com.joaoflaviofreitas.inchurch.BuildConfig
 

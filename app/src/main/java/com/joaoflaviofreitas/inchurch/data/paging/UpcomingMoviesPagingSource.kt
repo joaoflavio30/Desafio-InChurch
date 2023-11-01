@@ -3,23 +3,23 @@ package com.joaoflaviofreitas.inchurch.data.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.bumptech.glide.load.HttpException
-import com.joaoflaviofreitas.inchurch.data.remote.model.ResponseMovie
-import com.joaoflaviofreitas.inchurch.data.remote.service.api.MovieApi
+import com.joaoflaviofreitas.inchurch.data.remote.model.MovieDto
+import com.joaoflaviofreitas.inchurch.data.remote.service.MovieApi
 import java.io.IOException
 import java.lang.Exception
 import javax.inject.Inject
 
 class UpcomingMoviesPagingSource @Inject constructor(private val service: MovieApi) :
-    PagingSource<Int, ResponseMovie>() {
+    PagingSource<Int, MovieDto>() {
 
-    override fun getRefreshKey(state: PagingState<Int, ResponseMovie>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, MovieDto>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
                 ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
         }
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ResponseMovie> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MovieDto> {
         val pageIndex = params.key ?: 1
         return try {
             val response = service.getUpcomingMovies(pageIndex)
