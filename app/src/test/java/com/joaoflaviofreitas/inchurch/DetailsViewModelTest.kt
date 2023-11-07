@@ -1,6 +1,6 @@
 package com.joaoflaviofreitas.inchurch
 
-import com.joaoflaviofreitas.inchurch.data.local.model.FavoriteMovieId
+import com.joaoflaviofreitas.inchurch.data.local.model.FavoriteMovieIdEntity
 import com.joaoflaviofreitas.inchurch.domain.model.Genre
 import com.joaoflaviofreitas.inchurch.domain.model.Movie
 import com.joaoflaviofreitas.inchurch.domain.model.Response
@@ -71,7 +71,7 @@ class DetailsViewModelTest {
             }
             // When
             viewModel.getMovieDetails(movie.id)
-            viewModel.addOrRemoveFavoriteMovie(FavoriteMovieId(1, "Spider-man"), movie)
+            viewModel.addOrRemoveFavoriteMovie(FavoriteMovieIdEntity(1, "Spider-man"), movie)
 
             val result =
                 if (viewModel.uiState.value is Response.Success) {
@@ -94,7 +94,7 @@ class DetailsViewModelTest {
             }
             // When
             viewModel.getMovieDetails(movie.id)
-            viewModel.addOrRemoveFavoriteMovie(FavoriteMovieId(1, "Spider-man"), movie)
+            viewModel.addOrRemoveFavoriteMovie(FavoriteMovieIdEntity(1, "Spider-man"), movie)
 
             val result =
                 if (viewModel.uiState.value is Response.Success) {

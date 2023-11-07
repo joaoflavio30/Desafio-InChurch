@@ -3,10 +3,10 @@ package com.joaoflaviofreitas.inchurch.data.remote.data_sources // ktlint-disabl
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.joaoflaviofreitas.inchurch.data.paging.PopularMoviesPagingSource
-import com.joaoflaviofreitas.inchurch.data.paging.SearchedMoviesPagingSource
-import com.joaoflaviofreitas.inchurch.data.paging.TrendingMoviesPagingSource
-import com.joaoflaviofreitas.inchurch.data.paging.UpcomingMoviesPagingSource
+import com.joaoflaviofreitas.inchurch.data.remote.paging.PopularMoviesPagingSource
+import com.joaoflaviofreitas.inchurch.data.remote.paging.SearchedMoviesPagingSource
+import com.joaoflaviofreitas.inchurch.data.remote.paging.TrendingMoviesPagingSource
+import com.joaoflaviofreitas.inchurch.data.remote.paging.UpcomingMoviesPagingSource
 import com.joaoflaviofreitas.inchurch.data.remote.model.GenresDto
 import com.joaoflaviofreitas.inchurch.data.remote.model.MovieDto
 import com.joaoflaviofreitas.inchurch.data.remote.service.MovieApi

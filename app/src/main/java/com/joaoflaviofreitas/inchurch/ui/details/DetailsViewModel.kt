@@ -2,7 +2,7 @@ package com.joaoflaviofreitas.inchurch.ui.details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.joaoflaviofreitas.inchurch.data.local.model.FavoriteMovieId
+import com.joaoflaviofreitas.inchurch.domain.model.FavoriteMovieId
 import com.joaoflaviofreitas.inchurch.domain.model.Genre
 import com.joaoflaviofreitas.inchurch.domain.model.Movie
 import com.joaoflaviofreitas.inchurch.domain.model.Response
@@ -26,7 +26,7 @@ class DetailsViewModel @Inject constructor(
     private val getGenres: GetGenres,
     private val addFavoriteMovie: AddFavoriteMovie,
     private val deleteFavoriteMovie: DeleteFavoriteMovie,
-    private val getMovieDetailsImpl: GetMovieDetails,
+    private val getMovieDetails: GetMovieDetails,
     private val dispatcherProvider: DispatcherProvider,
 ) : ViewModel() {
 
@@ -49,7 +49,7 @@ class DetailsViewModel @Inject constructor(
 
     fun getMovieDetails(movieId: Int) {
         viewModelScope.launch(dispatcherProvider.io) {
-            getMovieDetailsImpl.execute(movieId).collectLatest {
+            getMovieDetails.execute(movieId).collectLatest {
                 _uiState.value = it
             }
         }

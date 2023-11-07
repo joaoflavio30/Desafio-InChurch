@@ -7,12 +7,15 @@ import com.joaoflaviofreitas.inchurch.data.local.dao.MovieDao
 import com.joaoflaviofreitas.inchurch.data.local.data_source.FavoriteMovieLocalDataSource
 import com.joaoflaviofreitas.inchurch.data.local.data_source.FavoriteMovieLocalDataSourceImpl
 import com.joaoflaviofreitas.inchurch.data.local.database.FavoriteMovieDatabase
+import com.joaoflaviofreitas.inchurch.data.local.model.FavoriteMovieIdEntity
+import com.joaoflaviofreitas.inchurch.data.mapper.mapFavoriteMovieId
+import com.joaoflaviofreitas.inchurch.data.mapper.mapFavoriteMovieIdEntity
 import com.joaoflaviofreitas.inchurch.data.mapper.mapGenreDto
 import com.joaoflaviofreitas.inchurch.data.mapper.mapGenresDto
 import com.joaoflaviofreitas.inchurch.data.mapper.mapMovieDto
-import com.joaoflaviofreitas.inchurch.data.paging.PopularMoviesPagingSource
-import com.joaoflaviofreitas.inchurch.data.paging.TrendingMoviesPagingSource
-import com.joaoflaviofreitas.inchurch.data.paging.UpcomingMoviesPagingSource
+import com.joaoflaviofreitas.inchurch.data.remote.paging.PopularMoviesPagingSource
+import com.joaoflaviofreitas.inchurch.data.remote.paging.TrendingMoviesPagingSource
+import com.joaoflaviofreitas.inchurch.data.remote.paging.UpcomingMoviesPagingSource
 import com.joaoflaviofreitas.inchurch.data.remote.data_sources.MovieRemoteDataSource
 import com.joaoflaviofreitas.inchurch.data.remote.data_sources.MovieRemoteDataSourceImpl
 import com.joaoflaviofreitas.inchurch.data.remote.model.GenresDto
@@ -20,6 +23,7 @@ import com.joaoflaviofreitas.inchurch.data.remote.model.MovieDto
 import com.joaoflaviofreitas.inchurch.data.remote.service.ConnectivityInterceptor
 import com.joaoflaviofreitas.inchurch.data.remote.service.MovieApi
 import com.joaoflaviofreitas.inchurch.data.repository.MovieRepositoryImpl
+import com.joaoflaviofreitas.inchurch.domain.model.FavoriteMovieId
 import com.joaoflaviofreitas.inchurch.domain.model.Genres
 import com.joaoflaviofreitas.inchurch.domain.model.Movie
 import com.joaoflaviofreitas.inchurch.domain.repository.MovieRepository
@@ -49,9 +53,17 @@ object DataModule {
         }
     }
 
+    private fun makeFavoriteMovieIdEntityMapper(): (FavoriteMovieIdEntity) -> FavoriteMovieId = { favoriteMovieIdEntity ->
+        mapFavoriteMovieIdEntity(favoriteMovieIdEntity)
+    }
+
+    private fun makeFavoriteMovieIdMapper(): (FavoriteMovieId) -> FavoriteMovieIdEntity = { favoriteMovieId ->
+        mapFavoriteMovieId(favoriteMovieId)
+    }
+
     @Provides
     @Singleton
-    fun provideMovieRepository(remoteDataSource: MovieRemoteDataSource, localDataSource: FavoriteMovieLocalDataSource): MovieRepository = MovieRepositoryImpl(remoteDataSource, localDataSource, makeMovieDtoMapper(), makeGenresDtoMapper())
+    fun provideMovieRepository(remoteDataSource: MovieRemoteDataSource, localDataSource: FavoriteMovieLocalDataSource): MovieRepository = MovieRepositoryImpl(remoteDataSource, localDataSource, makeMovieDtoMapper(), makeGenresDtoMapper(), makeFavoriteMovieIdMapper(), makeFavoriteMovieIdEntityMapper())
 
     @Provides
     @Singleton
