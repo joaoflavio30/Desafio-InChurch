@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.findNavController
-import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.joaoflaviofreitas.inchurch.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,6 +22,22 @@ class MainActivity : AppCompatActivity() {
         val navView: BottomNavigationView = binding.navView
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        navView.setupWithNavController(navController)
+
+        navView.setOnItemSelectedListener { menuItem ->
+            return@setOnItemSelectedListener if (navController.currentDestination?.id == R.id.navigation_details) {
+                if (menuItem.itemId == R.id.navigation_favorites) {
+                    navController.navigate(R.id.navigation_favorites)
+                } else {
+                    navController.navigate(R.id.navigation_home)
+                }
+                true
+            } else if (menuItem.itemId == R.id.navigation_favorites) {
+                navController.navigate(R.id.navigation_favorites)
+                true
+            } else {
+                navController.navigate(R.id.navigation_home)
+                true
+            }
+        }
     }
 }
