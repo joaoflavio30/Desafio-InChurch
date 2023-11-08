@@ -46,17 +46,17 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setAdapters()
         searchMovieByTerm()
         observeResponse()
         observeSearch()
         setupLoadStatesOfRvs()
         setupUiState()
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         binding.swipeRefresh.setOnRefreshListener {
             retryAdapters()
             binding.swipeRefresh.isRefreshing = false

@@ -39,10 +39,22 @@ class FavoritesFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentFavoritesBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setupAdapter()
         searchMovieByTerm()
         observeFavoriteMovies()
-        return binding.root
+        binding.swipeRefresh.setOnRefreshListener {
+            if (binding.searchView.query == null || binding.searchView.query.isBlank() || binding.searchView.query.isEmpty()) {
+                viewModel.fetchFavoritesMovies()
+            } else {
+                viewModel.searchFavoriteMovie(binding.searchView.query.toString())
+            }
+            binding.swipeRefresh.isRefreshing = false
+        }
     }
 
     private fun hasFavoriteMovie() {
@@ -55,18 +67,6 @@ class FavoritesFragment : Fragment() {
                     }
                 }
             }
-        }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding.swipeRefresh.setOnRefreshListener {
-            if (binding.searchView.query == null || binding.searchView.query.isBlank() || binding.searchView.query.isEmpty()) {
-                viewModel.fetchFavoritesMovies()
-            } else {
-                viewModel.searchFavoriteMovie(binding.searchView.query.toString())
-            }
-            binding.swipeRefresh.isRefreshing = false
         }
     }
 
@@ -106,23 +106,6 @@ class FavoritesFragment : Fragment() {
                     .distinctUntilChanged().collectLatest {
                         if (it != null) viewModel.searchFavoriteMovie(it)
                     }
-            }
-        }
-    }
-
-    private fun movieIsFound() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.favoriteMovies.collectLatest { response ->
-                    when (response) {
-                        is Response.Error -> {
-                            binding.notFoundMovie.isVisible = true
-                        }
-                        else -> {
-                            binding.notFoundMovie.isVisible = false
-                        }
-                    }
-                }
             }
         }
     }
