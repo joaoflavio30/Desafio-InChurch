@@ -1,7 +1,7 @@
 package com.joaoflaviofreitas.inchurch.utils
 
 import androidx.paging.PagingData
-import com.joaoflaviofreitas.inchurch.data.local.model.FavoriteMovieId
+import com.joaoflaviofreitas.inchurch.data.local.model.FavoriteMovieIdEntity
 import com.joaoflaviofreitas.inchurch.data.remote.model.GenreDto
 import com.joaoflaviofreitas.inchurch.data.remote.model.MovieDto
 import com.joaoflaviofreitas.inchurch.domain.model.Genre
@@ -19,7 +19,7 @@ class TestDataClassGenerator {
 
     fun getPagingDataWithMovie(): PagingData<Movie> = pagingData
 
-    fun getFavoriteMovieId() = favoriteMovieId
+    fun getFavoriteMovieId() = favoriteMovieIdEntity
 
     companion object {
         val genres = listOf(
@@ -68,6 +68,6 @@ class TestDataClassGenerator {
         )
         val pagingData = PagingData.from(listOf(movie))
 
-        val favoriteMovieId = FavoriteMovieId(1, "spider-man")
+        val favoriteMovieIdEntity = FavoriteMovieIdEntity(1, "spider-man")
     }
 }

@@ -1,7 +1,7 @@
 package com.joaoflaviofreitas.inchurch.domain.repository
 
 import androidx.paging.PagingData
-import com.joaoflaviofreitas.inchurch.data.local.model.FavoriteMovieId
+import com.joaoflaviofreitas.inchurch.domain.model.FavoriteMovieId
 import com.joaoflaviofreitas.inchurch.domain.model.Genres
 import com.joaoflaviofreitas.inchurch.domain.model.Movie
 import com.joaoflaviofreitas.inchurch.domain.model.Response

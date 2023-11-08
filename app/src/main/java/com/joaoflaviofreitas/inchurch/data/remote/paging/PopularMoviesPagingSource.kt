@@ -1,4 +1,4 @@
-package com.joaoflaviofreitas.inchurch.data.paging
+package com.joaoflaviofreitas.inchurch.data.remote.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
@@ -7,8 +7,9 @@ import com.joaoflaviofreitas.inchurch.data.remote.model.MovieDto
 import com.joaoflaviofreitas.inchurch.data.remote.service.MovieApi
 import java.io.IOException
 import java.lang.Exception
+import javax.inject.Inject
 
-class SearchedMoviesPagingSource(private val service: MovieApi, private val query: String) :
+class PopularMoviesPagingSource @Inject constructor(private val service: MovieApi) :
     PagingSource<Int, MovieDto>() {
 
     override fun getRefreshKey(state: PagingState<Int, MovieDto>): Int? {
@@ -21,7 +22,7 @@ class SearchedMoviesPagingSource(private val service: MovieApi, private val quer
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MovieDto> {
         val pageIndex = params.key ?: 1
         return try {
-            val response = service.searchMoviesByTerm(pageIndex, query)
+            val response = service.getPopularMovies(pageIndex)
             LoadResult.Page(
                 data = response.body()?.results ?: emptyList(),
                 prevKey = if (pageIndex == 1) null else pageIndex - 1,
